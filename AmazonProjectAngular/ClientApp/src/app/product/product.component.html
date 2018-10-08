@@ -1,0 +1,40 @@
+<h1>Products</h1>
+
+<p *ngIf="!products"><em>Loading...</em></p>
+
+<table class='table' *ngIf="products">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.category ? product.category.name : '' }}</td>
+      <td class="text-center">
+        <button type="button" class="btn btn-info btn-sm" (click)="addToCart(product.id)">
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <input #newProductName type="text" class="form-control"
+               (keyup.enter)="addProduct(newProductName.value, newProductDescription.value); newProductName.value = ''; newProductDescription.value = ''" />
+      </td>
+      <td>
+        <input #newProductDescription type="text" class="form-control"
+               (keyup.enter)="addProduct(newProductName.value, newProductDescription.value); newProductName.value = ''; newProductDescription.value = ''; newProductName.focus()" />
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
