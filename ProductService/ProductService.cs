@@ -23,19 +23,24 @@ namespace ProductServices
             return _productProvider.GetProductById(id);
         }
 
-        public Product AddProduct(Product product)
+        public void AddProduct(Product product)
         {
-            return _productProvider.AddProduct(product);
+            _productProvider.AddProduct(product);
         }
 
-        public Product UpdateProduct(int id, Product product)
+        public void UpdateProduct(int id, Product product)
         {
-            return _productProvider.UpdateProduct(id, product);
+            _productProvider.UpdateProduct(id, product);
         }
 
-        public Product DeleteProductById(int id)
+        public void DeleteProductById(int id)
         {
-            return _productProvider.DeleteProductById(id);
+            _productProvider.DeleteProductById(id);
+        }
+
+        public List<Product> Search(string query)
+        {
+            return _productProvider.Search(query);
         }
     }
 }

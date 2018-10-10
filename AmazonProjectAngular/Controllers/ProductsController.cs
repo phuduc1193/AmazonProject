@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AmazonProjectAngular.ViewModels;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -28,21 +29,27 @@ namespace AmazonProject.Controllers
         }
 
         [HttpPost]
-        public Product Post([FromBody] Product product)
+        public void Post([FromBody] Product product)
         {
-            return _productService.AddProduct(product);
+            _productService.AddProduct(product);
         }
 
         [HttpPut("{id}")]
-        public Product Put(int id, [FromBody] Product product)
+        public void Put(int id, [FromBody] Product product)
         {
-            return _productService.UpdateProduct(id, product);
+            _productService.UpdateProduct(id, product);
         }
 
         [HttpDelete("{id}")]
-        public Product Delete(int id)
+        public void Delete(int id)
         {
-            return _productService.DeleteProductById(id);
+            _productService.DeleteProductById(id);
+        }
+
+        [HttpPost("[action]")]
+        public IEnumerable<Product> Search([FromBody]SearchProductViewModel search)
+        {
+            return _productService.Search(search.Query);
         }
     }
 }

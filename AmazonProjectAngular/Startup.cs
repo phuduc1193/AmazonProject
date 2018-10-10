@@ -25,7 +25,12 @@ namespace AmazonProjectAngular
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IProductProvider, ProductProvider>();
+            services.AddSingleton<IProductProvider, ProductProvider>(provider =>
+            {
+                var connectionString = Configuration.GetConnectionString("Database");
+                return new ProductProvider(connectionString);
+            });
+
             services.AddScoped<IProductService, ProductService>();
 
             // In production, the Angular files will be served from this directory
@@ -68,6 +73,7 @@ namespace AmazonProjectAngular
 
                 if (env.IsDevelopment())
                 {
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });

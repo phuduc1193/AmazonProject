@@ -7,8 +7,9 @@ namespace Interfaces
     {
         List<Product> GetList();
         Product GetProductById(int id);
-        Product AddProduct(Product product);
-        Product UpdateProduct(int id, Product product);
-        Product DeleteProductById(int id);
+        int AddProduct(Product product);
+        int UpdateProduct(int id, Product product);
+        void DeleteProductById(int id);
+        List<Product> Search(string query);
     }
 }

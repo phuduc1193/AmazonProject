@@ -1,0 +1,12 @@
+<input #box
+       type="text"
+       class="form-control border-dark"
+       placeholder="Search"
+       (keyup.enter)="search(box.value)">
+<div class="input-group-append">
+  <button class="btn btn-outline-secondary"
+          type="button"
+          (click)="search(box.value)">
+    <i class="fa fa-search"></i>
+  </button>
+</div>
