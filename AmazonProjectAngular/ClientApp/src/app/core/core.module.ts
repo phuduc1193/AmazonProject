@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-
 import { SearchService } from "./search.service";
 
 @NgModule({
