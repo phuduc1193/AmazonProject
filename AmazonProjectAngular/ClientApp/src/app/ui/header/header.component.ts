@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { environment } from "@environments/environment";
 
 @Component({
   selector: "app-header",
@@ -10,7 +11,11 @@ export class HeaderComponent implements OnInit {
 
   public totalPrice = "$0.00";
 
-  constructor() {}
+  public appName = environment.appName;
+
+  constructor() {
+    document.getElementsByTagName("title")[0].innerHTML = this.appName;
+  }
 
   ngOnInit() {}
 }

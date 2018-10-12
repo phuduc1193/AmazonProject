@@ -8,4 +8,8 @@ import { ProductListComponent } from "./product-list/product-list.component";
   imports: [CommonModule, ProductRoutingModule],
   declarations: [ProductListComponent]
 })
-export class ProductModule {}
+export class ProductModule {
+  constructor() {
+    console.log("ProductModule loaded.");
+  }
+}

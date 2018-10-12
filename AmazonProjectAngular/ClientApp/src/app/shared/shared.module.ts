@@ -14,7 +14,6 @@ import { AppState } from "../shared/app.state";
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: true }),
     NgxsReduxDevtoolsPluginModule.forRoot()
-  ],
-  declarations: []
+  ]
 })
 export class SharedModule {}
