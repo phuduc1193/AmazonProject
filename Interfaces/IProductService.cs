@@ -11,5 +11,6 @@ namespace Interfaces
         void UpdateProduct(int id, Product product);
         void DeleteProductById(int id);
         List<Product> Search(string query);
+        Product GetFeaturedProduct();
     }
 }

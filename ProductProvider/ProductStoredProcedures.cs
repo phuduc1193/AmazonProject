@@ -7,5 +7,7 @@
         public static string Update => "spUpdateProduct";
 
         public static string Search => "sqSearchProduct";
+
+        public static string FeaturedProduct => "sqGetFeaturedProduct";
     }
 }

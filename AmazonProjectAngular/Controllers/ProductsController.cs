@@ -51,5 +51,11 @@ namespace AmazonProject.Controllers
         {
             return _productService.Search(search.Query);
         }
+
+        [HttpGet("[action]")]
+        public Product Featured()
+        {
+            return _productService.GetFeaturedProduct();
+        }
     }
 }

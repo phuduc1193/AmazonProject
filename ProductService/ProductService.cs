@@ -42,5 +42,10 @@ namespace ProductServices
         {
             return _productProvider.Search(query);
         }
+
+        public Product GetFeaturedProduct()
+        {
+            return _productProvider.GetFeaturedProduct();
+        }
     }
 }

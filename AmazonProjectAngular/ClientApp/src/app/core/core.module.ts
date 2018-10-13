@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
-import { SearchService } from "./search.service";
+import { ProductService } from "./product.service";
 
 @NgModule({
-  providers: [SearchService]
+  providers: [ProductService]
 })
 export class CoreModule {}

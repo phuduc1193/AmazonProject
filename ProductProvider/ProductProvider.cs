@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Reflection;
 using Interfaces;
 using Model;
+using ProviderUtilities;
 
 namespace ProductProviders
 {
@@ -35,7 +34,7 @@ namespace ProductProviders
                         if (!reader.HasRows)
                             return null;
 
-                        return DataReaderMapToList<Product>(reader);
+                        return ProviderUtility.DataReaderMapToList<Product>(reader);
                     }
                 }
             }
@@ -61,7 +60,7 @@ namespace ProductProviders
                         if (!reader.HasRows)
                             return null;
 
-                        return DataReaderMapToObject<Product>(reader);
+                        return ProviderUtility.DataReaderMapToObject<Product>(reader);
                     }
                 }
             }
@@ -156,7 +155,7 @@ namespace ProductProviders
                         if (!reader.HasRows)
                             return null;
 
-                        var results = DataReaderMapToList<Product>(reader);
+                        var results = ProviderUtility.DataReaderMapToList<Product>(reader);
                         return results;
                     }
                 }
@@ -167,55 +166,29 @@ namespace ProductProviders
             }
         }
 
-        public static T DataReaderMapToObject<T>(IDataReader dr)
+        public Product GetFeaturedProduct()
         {
-            T obj = default(T);
-            while (dr.Read())
+            try
             {
-                obj = Activator.CreateInstance<T>();
-                foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    if (!Equals(dr[prop.Name], DBNull.Value))
+                    var command = new SqlCommand(ProductStoredProcedures.FeaturedProduct, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
                     {
-                        prop.SetValue(obj, dr[prop.Name], null);
+                        if (!reader.HasRows)
+                            return null;
+
+                        return ProviderUtility.DataReaderMapToObject<Product>(reader);
                     }
                 }
             }
-            return obj;
-        }
-
-        public static List<T> DataReaderMapToList<T>(IDataReader dr)
-        {
-            List<T> list = new List<T>();
-            T obj = default(T);
-            while (dr.Read())
+            catch (Exception)
             {
-                obj = Activator.CreateInstance<T>();
-                foreach (PropertyInfo prop in obj.GetType().GetProperties())
-                {
-                    if (!ColumnExists(dr, prop.Name))
-                        continue;
-                    if (!Equals(dr[prop.Name], DBNull.Value))
-                    {
-                        prop.SetValue(obj, dr[prop.Name], null);
-                    }
-                }
-                list.Add(obj);
+                throw;
             }
-            return list;
-        }
-
-        public static bool ColumnExists(IDataReader reader, string columnName)
-        {
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                if (reader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }
