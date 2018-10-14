@@ -12,6 +12,7 @@ import { HomeBookBestSellersComponent } from './home-book-best-sellers/home-book
 import { HomeElectronicBestSellersComponent } from './home-electronic-best-sellers/home-electronic-best-sellers.component';
 import { HomeTrendingProductsComponent } from './home-trending-products/home-trending-products.component';
 import { HomeMostWishedComponent } from './home-most-wished/home-most-wished.component';
+import { HomeMoviesComponent } from './home-movies/home-movies.component';
 
 @NgModule({
   imports: [CommonModule, HomeRoutingModule],
@@ -25,7 +26,8 @@ import { HomeMostWishedComponent } from './home-most-wished/home-most-wished.com
     HomeBookBestSellersComponent,
     HomeElectronicBestSellersComponent,
     HomeTrendingProductsComponent,
-    HomeMostWishedComponent
+    HomeMostWishedComponent,
+    HomeMoviesComponent
   ]
 })
 export class HomeModule {

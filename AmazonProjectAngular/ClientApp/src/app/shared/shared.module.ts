@@ -4,7 +4,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { NgxsModule } from "@ngxs/store";
 import { NgxsLoggerPluginModule } from "@ngxs/logger-plugin";
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
-
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AppState } from "../shared/app.state";
 
 @NgModule({
@@ -13,7 +13,8 @@ import { AppState } from "../shared/app.state";
     FormsModule,
     NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: true }),
-    NgxsReduxDevtoolsPluginModule.forRoot()
+    NgxsReduxDevtoolsPluginModule.forRoot(),
+    NgbModule
   ]
 })
 export class SharedModule {}

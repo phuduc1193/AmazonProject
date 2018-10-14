@@ -1,4 +1,4 @@
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Inject } from "@angular/core";
 import { Product } from "@interface/product";
@@ -11,7 +11,7 @@ export class ProductService {
   ) {}
 
   private results = new BehaviorSubject<Product[]>([]);
-  private result = new BehaviorSubject<Product>([]);
+  private result = new BehaviorSubject<Product>(null);
 
   public getResults() {
     return this.results.asObservable();

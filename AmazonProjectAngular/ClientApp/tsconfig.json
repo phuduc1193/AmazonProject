@@ -8,14 +8,31 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "paths": {
-      "@app/*": ["app/*"],
-      "@core/*": ["app/core/*"],
-      "@interface/*": ["app/interface/*"],
-      "@shared/*": ["app/shared/*"],
-      "@environments/*": ["environments/*"]
-    }
+      "@app/*": [
+        "app/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@interface/*": [
+        "app/interface/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@environments/*": [
+        "environments/*"
+      ]
+    },
+    "module": "es2015",
+    "baseUrl": "./"
   }
 }
