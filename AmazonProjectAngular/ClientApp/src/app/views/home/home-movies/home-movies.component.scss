@@ -30,12 +30,21 @@
 
 /*Reduce with of un-hovered elements*/
 .accordian ul:hover li {
-  width: 6.5%;
+  width: 4%;
 }
 /*Lets apply hover effects now*/
 /*The LI hover style should override the UL hover style*/
 .accordian ul li:hover {
-  width: 41.5%;
+  width: 64%;
+}
+
+@media only screen and (min-width: 1200px) {
+  .accordian ul:hover li {
+    width: 6.5%;
+  }
+  .accordian ul li:hover {
+    width: 41.5%;
+  }
 }
 
 .accordian li img {

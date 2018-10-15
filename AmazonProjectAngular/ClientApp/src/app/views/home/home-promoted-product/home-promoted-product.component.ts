@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { ProductService } from "@core/product.service";
-import { Product } from "@interface/product";
+import { ProductService } from "@app/core/product.service";
+import { Product } from "@app/interface/product";
 
 @Component({
   selector: "[appHomePromotedProduct]",
@@ -10,12 +10,11 @@ import { Product } from "@interface/product";
 export class HomePromotedProductComponent implements OnInit {
   public product: Product;
 
-  constructor(private productService: ProductService) {
-    this.productService.getFeaturedProduct();
-    this.productService.getResult().subscribe((result: Product) => {
+  constructor(private productService: ProductService) {}
+
+  ngOnInit() {
+    this.productService.getFeaturedProduct().subscribe((result: Product) => {
       this.product = result;
     });
   }
-
-  ngOnInit() {}
 }

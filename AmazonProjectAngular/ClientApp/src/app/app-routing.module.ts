@@ -4,12 +4,16 @@ import { Routes, RouterModule } from "@angular/router";
 const routes: Routes = [
   {
     path: "",
-    loadChildren: "app/home/home.module#HomeModule",
+    loadChildren: "app/views/home/home.module#HomeModule",
     pathMatch: "full"
   },
   {
     path: "product",
-    loadChildren: "app/product/product.module#ProductModule"
+    loadChildren: "app/views/product/product.module#ProductModule"
+  },
+  {
+    path: "sell",
+    loadChildren: "app/views/seller/seller.module#SellerModule"
   }
 ];
 

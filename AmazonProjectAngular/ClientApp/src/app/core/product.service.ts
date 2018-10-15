@@ -1,7 +1,7 @@
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, Inject } from "@angular/core";
-import { Product } from "@interface/product";
+import { Product } from "@app/interface/product";
 
 @Injectable()
 export class ProductService {
@@ -11,14 +11,9 @@ export class ProductService {
   ) {}
 
   private results = new BehaviorSubject<Product[]>([]);
-  private result = new BehaviorSubject<Product>(null);
 
   public getResults() {
     return this.results.asObservable();
-  }
-
-  public getResult() {
-    return this.result.asObservable();
   }
 
   public search(queryString: string) {
@@ -28,9 +23,7 @@ export class ProductService {
       .subscribe((response: Product[]) => this.results.next(response));
   }
 
-  public getFeaturedProduct() {
-    this.http
-      .get(this.baseUrl + "api/Products/Featured")
-      .subscribe((response: Product) => this.result.next(response));
+  public getFeaturedProduct(): Observable<Product> {
+    return this.http.get<Product>(this.baseUrl + "api/Products/Featured");
   }
 }

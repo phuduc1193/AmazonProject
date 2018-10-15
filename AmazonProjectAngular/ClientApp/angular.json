@@ -68,6 +68,26 @@
             "exclude": ["**/node_modules/**"]
           }
         }
+      },
+      "schematics": {
+        "@schematics/angular:component": {
+          "spec": false
+        },
+        "@schematics/angular:directive": {
+          "spec": false
+        },
+        "@schematics/angular:modules": {
+          "spec": false
+        },
+        "@schematics/angular:pipe": {
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "spec": false
+        },
+        "@schematics/angular:class": {
+          "spec": false
+        }
       }
     },
     "AmazonProjectAngular-e2e": {
