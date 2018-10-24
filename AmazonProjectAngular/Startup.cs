@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProductProviders;
 using ProductServices;
+using UserProviders;
+using UserServices;
 
 namespace AmazonProjectAngular
 {
@@ -25,12 +27,16 @@ namespace AmazonProjectAngular
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IProductProvider, ProductProvider>(provider =>
+            var connectionString = Configuration.GetConnectionString("Database");
+            services.AddSingleton<IUserProvider, UserProvider>(provider =>
             {
-                var connectionString = Configuration.GetConnectionString("Database");
+                return new UserProvider(connectionString);
+            }); services.AddSingleton<IProductProvider, ProductProvider>(provider =>
+            {
                 return new ProductProvider(connectionString);
             });
 
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
 
             // In production, the Angular files will be served from this directory
