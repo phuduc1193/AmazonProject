@@ -1,13 +1,13 @@
 <div class="card bg-white border-white">
   <div class="card-body">
-    <h4 class="card-title">{{ product.name }}</h4>
+    <h4 class="card-title">{{ product?.name }}</h4>
     <div class="text-center">
-      <img [src]="product.imageUrl"
+      <img [src]="product?.imageUrl"
            width="100%">
     </div>
     <div class="content">
-      <p>{{ product.description }}</p>
-      <a [routerLink]="'/product/' + product.id">See details</a>
+      <p>{{ product?.description }}</p>
+      <a [routerLink]="'/product/' + product?.id">See details</a>
     </div>
   </div>
 </div>

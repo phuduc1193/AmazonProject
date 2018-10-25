@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { environment } from "@env/environment";
+import { Component, OnInit, Inject } from "@angular/core";
 
 @Component({
   selector: "app-header",
@@ -7,14 +6,13 @@ import { environment } from "@env/environment";
   styleUrls: ["./header.component.scss"]
 })
 export class HeaderComponent implements OnInit {
-  public itemCounter = 0;
+  itemCounter: number = 0;
+  totalPrice: string = "$0.00";
+  appName: string;
 
-  public totalPrice = "$0.00";
-
-  public appName = environment.appName;
-
-  constructor() {
-    document.getElementsByTagName("title")[0].innerHTML = this.appName;
+  constructor(@Inject("APP_NAME") appName: string) {
+    document.getElementsByTagName("title")[0].innerHTML = appName;
+    this.appName = appName;
   }
 
   ngOnInit() {}

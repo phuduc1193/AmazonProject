@@ -1,5 +1,4 @@
-import { Component, OnInit } from "@angular/core";
-import { environment } from "@env/environment";
+import { Component, OnInit, Inject } from "@angular/core";
 
 @Component({
   selector: "app-home",
@@ -7,10 +6,12 @@ import { environment } from "@env/environment";
   styleUrls: ["./home.component.scss"]
 })
 export class HomeComponent implements OnInit {
-  appName: string = environment.appName;
   register: boolean = false;
+  appName: string;
 
-  constructor() {}
+  constructor(@Inject("APP_NAME") appName: string) {
+    this.appName = appName;
+  }
 
   ngOnInit() {}
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormControl, Validators, FormGroup } from "@angular/forms";
 
-import { AuthService } from "@app/core/auth.service";
-import { AuthResponse } from "@app/interface/auth-response";
+import { AuthService } from "../../../core/auth.service";
+import { AuthResponse } from "../../../interface/auth-response";
 
 @Component({
   selector: "[appHomeLogin]",

@@ -12,7 +12,16 @@ import $ from "jquery";
 import "popper.js";
 import "bootstrap";
 
-const providers = [{ provide: "BASE_URL", useFactory: getBaseUrl, deps: [] }];
+const providers = [
+  { provide: "BASE_URL", useFactory: getBaseUrl, deps: [] },
+  {
+    provide: "APP_NAME",
+    useFactory: () => {
+      return environment.appName;
+    },
+    deps: []
+  }
+];
 
 if (environment.production) {
   enableProdMode();

@@ -5,7 +5,7 @@ import {
   ViewChild,
   ElementRef
 } from "@angular/core";
-import { ProductService } from "@app/core/product.service";
+import { ProductService } from "../../../core/product.service";
 
 @Component({
   selector: "app-seller-home-search",
