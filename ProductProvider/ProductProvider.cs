@@ -127,10 +127,8 @@ namespace ProductProviders
                     command.Parameters.AddWithValue("@Id", id);
 
                     connection.Open();
-                    using (var reader = command.ExecuteReader())
-                    {
-                       
-                    }
+                    if (command.ExecuteNonQuery() == 0)
+                        throw new Exception();
                 }
             }
             catch (Exception)

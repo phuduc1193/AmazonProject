@@ -21,7 +21,7 @@ namespace UserServices
 
             if (!PasswordHasher.Validate(password, userCredential.Password))
                 throw new InvalidLoginCredentialException(userCredential.Username);
-            
+
             var credentialSchema = TokenManager.Encode(userCredential.Username);
             _userProvider.UpdateTokenByUsername(userCredential.Username, credentialSchema);
             return credentialSchema;
@@ -35,6 +35,24 @@ namespace UserServices
 
             var credentialSchema = TokenManager.Encode(userCredential.Username);
             _userProvider.UpdateTokenByUsername(userCredential.Username, credentialSchema);
+            return credentialSchema;
+        }
+
+        public CredentialSchema Register(string username, string password)
+        {
+            var existedUser = _userProvider.GetUserCredentialByUsername(username);
+            if (existedUser != null)
+                throw new DuplicateUsernameException(username);
+
+            var credentialSchema = TokenManager.Encode(username);
+            var userCredential = new UserCredential
+            {
+                Username = username,
+                Password = PasswordHasher.Hash(password),
+                AccessToken = credentialSchema.AccessToken,
+                RefreshToken = credentialSchema.RefreshToken
+            };
+            _userProvider.CreateUserCredential(userCredential);
             return credentialSchema;
         }
 

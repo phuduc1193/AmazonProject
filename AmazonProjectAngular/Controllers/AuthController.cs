@@ -27,6 +27,12 @@ namespace AmazonProjectAngular.Controllers
         }
 
         [HttpPost("[action]")]
+        public CredentialSchema Register([FromBody] UserCredential userCredential)
+        {
+            return _userService.Register(userCredential.Username, userCredential.Password);
+        }
+
+        [HttpPost("[action]")]
         public CredentialSchema RefreshToken([FromBody] string token)
         {
             return _userService.LoginWithRefreshToken(token);

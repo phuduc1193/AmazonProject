@@ -15,6 +15,7 @@ import { HomeElectronicBestSellersComponent } from "./home-electronic-best-selle
 import { HomeTrendingProductsComponent } from "./home-trending-products/home-trending-products.component";
 import { HomeMostWishedComponent } from "./home-most-wished/home-most-wished.component";
 import { HomeMoviesComponent } from "./home-movies/home-movies.component";
+import { HomeRegisterComponent } from './home-register/home-register.component';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { HomeMoviesComponent } from "./home-movies/home-movies.component";
     HomeElectronicBestSellersComponent,
     HomeTrendingProductsComponent,
     HomeMostWishedComponent,
-    HomeMoviesComponent
+    HomeMoviesComponent,
+    HomeRegisterComponent
   ]
 })
 export class HomeModule {

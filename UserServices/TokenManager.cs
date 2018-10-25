@@ -10,6 +10,7 @@ namespace UserServices
     {
         private const string _iss = "iss";
         private const string _secretKey = "c7cDmp";
+        private static byte[] _secretKeyInBytes { get { return Encoding.ASCII.GetBytes(_secretKey); } }
         private const JwsAlgorithm _alg = JwsAlgorithm.HS256;
 
         private static Dictionary<string, object> GetPayloadDictionary(string username, int expiredIn)
@@ -32,13 +33,13 @@ namespace UserServices
         private static string Encode(string username, int expiresInMinute)
         {
             var payload = GetPayloadDictionary(username, expiresInMinute);
-            return JWT.Encode(payload, _secretKey, _alg);
+            return JWT.Encode(payload, _secretKeyInBytes, _alg);
         }
 
         public static CredentialSchema Encode(string username)
         {
             var expiresInMinute = 120;
-            var refreshToken = new Guid().ToString();
+            var refreshToken = Guid.NewGuid().ToString();
 
             return new CredentialSchema
             {
@@ -53,7 +54,7 @@ namespace UserServices
         {
             try
             {
-                var result = JWT.Decode(token, _secretKey, _alg);
+                var result = JWT.Decode(token, _secretKeyInBytes, _alg);
                 return !string.IsNullOrWhiteSpace(result);
             }
             catch(Exception)

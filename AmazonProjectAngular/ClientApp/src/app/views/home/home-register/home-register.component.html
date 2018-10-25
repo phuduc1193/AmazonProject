@@ -1,6 +1,6 @@
 <div class="card-body">
-  <h4 class="card-title text-center">Welcome to {{ appName }}</h4>
-  <p class="text-center">Log in to get the best user experience!</p>
+  <h4 class="card-title text-center">Join {{ appName }}'s family</h4>
+  <p class="text-center">Sign up to get best deals and bring value to your home!</p>
   <div class="form-row align-items-center"
        [formGroup]="formGroup">
     <div class="form-group col-12">
@@ -35,13 +35,31 @@
                formControlName="Password">
       </div>
     </div>
+    <div class="form-group col-12 mb-3"
+         [customErrorMessages]="customErrorMessages">
+      <label class="sr-only"
+             for="passwordVerificationInputGroup">Password Verification</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-check-circle"></i>
+          </div>
+        </div>
+        <input type="password"
+               class="form-control"
+               validateEqual="password"
+               id="passwordVerificationInputGroup"
+               placeholder="Password Verification"
+               formControlName="PasswordVerification">
+      </div>
+    </div>
     <div class="col-6"><button type="button"
               class="btn btn-block"
-              [ngClass]="formGroup.valid ? 'btn-outline-primary' : 'btn-outline-secondary'"
+              [ngClass]="formGroup.valid ? 'btn-outline-success' : 'btn-outline-secondary'"
               (click)="onSubmit()"
-              [disabled]="!formGroup.valid">Log In</button></div>
+              [disabled]="!formGroup.valid">Sign Up</button></div>
     <div class="col-6"><button type="button"
-              class="btn btn-outline-success btn-block"
-              (click)="onRegister()">Sign Up</button></div>
+              class="btn btn-outline-primary btn-block"
+              (click)="onLogIn()">Log In</button></div>
   </div>
 </div>

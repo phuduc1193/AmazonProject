@@ -7,5 +7,7 @@
         public static string GetUserCredentialByRefreshToken => "spGetUserCredentialByRefreshToken";
 
         public static string UpdateUserCredentialByUsername => "spUpdateUserCredentialByUsername";
+
+        public static string InsertUserCredential => "spInsertUserCredential";
     }
 }
