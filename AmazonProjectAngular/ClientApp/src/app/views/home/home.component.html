@@ -9,7 +9,15 @@
       <div appHomeAds
            class="card"></div>
       <div appHomeLogin
-           class="card d-none d-lg-block"></div>
+           [appName]="appName"
+           class="card d-none d-lg-block"
+           (register)="register = true"
+           *ngIf="!register"></div>
+      <div appHomeRegister
+           [appName]="appName"
+           class="card d-none d-lg-block"
+           (logIn)="register = false"
+           *ngIf="register"></div>
     </div>
   </div>
 </div>

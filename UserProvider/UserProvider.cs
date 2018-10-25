@@ -85,9 +85,35 @@ namespace UserProviders
                     command.Parameters.AddWithValue("@RefreshToken", credentialSchema.RefreshToken);
 
                     connection.Open();
+                    if (command.ExecuteNonQuery() == 0)
+                        throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void CreateUserCredential(UserCredential userCredential)
+        {
+            if (userCredential == null) return;
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var command = new SqlCommand(UserStoredProcedures.InsertUserCredential, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Username", userCredential.Username);
+                    command.Parameters.AddWithValue("@Password", userCredential.Password);
+                    command.Parameters.AddWithValue("@AccessToken", userCredential.AccessToken);
+                    command.Parameters.AddWithValue("@RefreshToken", userCredential.RefreshToken);
+
+                    connection.Open();
                     var id = Convert.ToInt32(command.ExecuteScalar());
                     if (id <= 0)
-                        throw new Exception();
+                        throw new Exception("Cannot insert UserCredential");
                 }
             }
             catch (Exception)

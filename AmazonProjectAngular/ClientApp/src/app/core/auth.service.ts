@@ -12,4 +12,9 @@ export class AuthService {
     const data = { username: username, password: password };
     return this.http.post(this.baseUrl + "api/auth/login", data);
   }
+
+  public register(username: string, password: string) {
+    const data = { username: username, password: password };
+    return this.http.post(this.baseUrl + "api/auth/register", data);
+  }
 }

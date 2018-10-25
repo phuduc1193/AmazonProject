@@ -1,9 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormControl, Validators, FormGroup } from "@angular/forms";
 
 import { AuthService } from "@app/core/auth.service";
 import { AuthResponse } from "@app/interface/auth-response";
-import { environment } from "@env/environment";
 
 @Component({
   selector: "[appHomeLogin]",
@@ -11,8 +10,11 @@ import { environment } from "@env/environment";
   styleUrls: ["./home-login.component.scss"]
 })
 export class HomeLoginComponent implements OnInit {
-  appName = environment.appName;
+  @Input()
+  appName: string;
   formGroup: FormGroup;
+  @Output()
+  register: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private authService: AuthService) {}
 
@@ -22,7 +24,7 @@ export class HomeLoginComponent implements OnInit {
         Username: new FormControl("", [Validators.required]),
         Password: new FormControl("", [Validators.required])
       },
-      { updateOn: "blur" }
+      { updateOn: "change" }
     );
   }
 
@@ -40,5 +42,9 @@ export class HomeLoginComponent implements OnInit {
       .subscribe((result: AuthResponse) => {
         console.log(result);
       });
+  }
+
+  onRegister() {
+    this.register.emit(true);
   }
 }
