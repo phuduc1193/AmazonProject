@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { FormControl, Validators, FormGroup } from "@angular/forms";
 
+import { AuthService } from "@app/core/auth.service";
+import { AuthResponse } from "@app/interface/auth-response";
 import { environment } from "@env/environment";
 
 @Component({
@@ -8,9 +11,34 @@ import { environment } from "@env/environment";
   styleUrls: ["./home-login.component.scss"]
 })
 export class HomeLoginComponent implements OnInit {
-  public appName = environment.appName;
+  appName = environment.appName;
+  formGroup: FormGroup;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.formGroup = new FormGroup(
+      {
+        Username: new FormControl("", [Validators.required]),
+        Password: new FormControl("", [Validators.required])
+      },
+      { updateOn: "blur" }
+    );
+  }
+
+  get username() {
+    return this.formGroup.get("Username").value;
+  }
+  get password() {
+    return this.formGroup.get("Password").value;
+  }
+
+  onSubmit() {
+    if (!this.formGroup.valid) return;
+    this.authService
+      .login(this.username, this.password)
+      .subscribe((result: AuthResponse) => {
+        console.log(result);
+      });
+  }
 }

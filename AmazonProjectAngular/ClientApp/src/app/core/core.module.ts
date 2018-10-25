@@ -1,7 +1,8 @@
 import { NgModule } from "@angular/core";
 import { ProductService } from "./product.service";
+import { AuthService } from "./auth.service";
 
 @NgModule({
-  providers: [ProductService]
+  providers: [ProductService, AuthService]
 })
 export class CoreModule {}

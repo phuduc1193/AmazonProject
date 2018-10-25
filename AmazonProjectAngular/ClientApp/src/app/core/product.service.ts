@@ -19,11 +19,11 @@ export class ProductService {
   public search(queryString: string) {
     const data = { query: queryString };
     this.http
-      .post(this.baseUrl + "api/Products/Search", data)
+      .post(this.baseUrl + "api/products/search", data)
       .subscribe((response: Product[]) => this.results.next(response));
   }
 
   public getFeaturedProduct(): Observable<Product> {
-    return this.http.get<Product>(this.baseUrl + "api/Products/Featured");
+    return this.http.get<Product>(this.baseUrl + "api/products/featured");
   }
 }
