@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { NgProgressRouterModule } from "@ngx-progressbar/router";
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), NgProgressRouterModule.forRoot()],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

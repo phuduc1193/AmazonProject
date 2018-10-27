@@ -12,12 +12,12 @@
            [appName]="appName"
            class="card d-none d-lg-block"
            (register)="register = true"
-           *ngIf="!register"></div>
+           *ngIf="!register  && !(isLoggedIn$ | async)"></div>
       <div appHomeRegister
            [appName]="appName"
            class="card d-none d-lg-block"
            (logIn)="register = false"
-           *ngIf="register"></div>
+           *ngIf="register && !(isLoggedIn$ | async)"></div>
     </div>
   </div>
 </div>

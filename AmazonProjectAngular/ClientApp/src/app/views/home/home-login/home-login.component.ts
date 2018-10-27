@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormControl, Validators, FormGroup } from "@angular/forms";
 
-import { AuthService } from "../../../core/auth.service";
-import { AuthResponse } from "../../../interface/auth-response";
+import { Store } from "@ngxs/store";
+import { AuthenticateUser } from "../../../shared/state/auth.state";
 
 @Component({
   selector: "[appHomeLogin]",
@@ -16,7 +16,7 @@ export class HomeLoginComponent implements OnInit {
   @Output()
   register: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private authService: AuthService) {}
+  constructor(private store: Store) {}
 
   ngOnInit() {
     this.formGroup = new FormGroup(
@@ -37,11 +37,7 @@ export class HomeLoginComponent implements OnInit {
 
   onSubmit() {
     if (!this.formGroup.valid) return;
-    this.authService
-      .login(this.username, this.password)
-      .subscribe((result: AuthResponse) => {
-        console.log(result);
-      });
+    this.store.dispatch(new AuthenticateUser(this.username, this.password));
   }
 
   onRegister() {

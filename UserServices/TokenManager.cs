@@ -13,38 +13,14 @@ namespace UserServices
         private static byte[] _secretKeyInBytes { get { return Encoding.ASCII.GetBytes(_secretKey); } }
         private const JwsAlgorithm _alg = JwsAlgorithm.HS256;
 
-        private static Dictionary<string, object> GetPayloadDictionary(string username, int expiredIn)
-        {
-            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            var issueTime = DateTime.Now;
-
-            var iat = (int)issueTime.Subtract(utc0).TotalSeconds;
-            var exp = (int)issueTime.AddMinutes(expiredIn).Subtract(utc0).TotalSeconds;
-
-            return new Dictionary<string, object>()
-            {
-                { "iss", _iss },
-                { "sub", username },
-                { "exp", exp },
-                { "iat", iat }
-            };
-        }
-
-        private static string Encode(string username, int expiresInMinute)
-        {
-            var payload = GetPayloadDictionary(username, expiresInMinute);
-            return JWT.Encode(payload, _secretKeyInBytes, _alg);
-        }
-
         public static CredentialSchema Encode(string username)
         {
-            var expiresInMinute = 120;
             var refreshToken = Guid.NewGuid().ToString();
-
+            GenerateIatExp(out int iat, out int exp);
             return new CredentialSchema
             {
-                AccessToken = Encode(username, expiresInMinute),
-                ExpiresIn = expiresInMinute,
+                AccessToken = Encode(username, iat, exp),
+                ExpiresIn = exp,
                 TokenType = "bearer",
                 RefreshToken = refreshToken
             };
@@ -57,10 +33,38 @@ namespace UserServices
                 var result = JWT.Decode(token, _secretKeyInBytes, _alg);
                 return !string.IsNullOrWhiteSpace(result);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
+        }
+
+        private static Dictionary<string, object> GetPayloadDictionary(string username, int iat, int exp)
+        {
+            return new Dictionary<string, object>()
+            {
+                { "iss", _iss },
+                { "sub", username },
+                { "exp", exp },
+                { "iat", iat }
+            };
+        }
+
+        private static string Encode(string username, int iat, int exp)
+        {
+            var payload = GetPayloadDictionary(username, iat, exp);
+            return JWT.Encode(payload, _secretKeyInBytes, _alg);
+        }
+
+        private static void GenerateIatExp(out int iat, out int exp)
+        {
+            var expiresInMinute = 120;
+
+            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var issueTime = DateTime.Now;
+
+            iat = (int)issueTime.Subtract(utc0).TotalSeconds;
+            exp = (int)issueTime.AddMinutes(expiresInMinute).Subtract(utc0).TotalSeconds;
         }
     }
 }

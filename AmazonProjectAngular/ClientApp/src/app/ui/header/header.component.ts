@@ -1,4 +1,7 @@
 import { Component, OnInit, Inject } from "@angular/core";
+import { Store, Select } from "@ngxs/store";
+import { Observable } from "rxjs";
+import { AuthState, LogOutUser } from "../../shared/state/auth.state";
 
 @Component({
   selector: "app-header",
@@ -10,10 +13,17 @@ export class HeaderComponent implements OnInit {
   totalPrice: string = "$0.00";
   appName: string;
 
-  constructor(@Inject("APP_NAME") appName: string) {
+  @Select(AuthState.isLoggedIn)
+  isLoggedIn$: Observable<boolean>;
+
+  constructor(@Inject("APP_NAME") appName: string, private store: Store) {
     document.getElementsByTagName("title")[0].innerHTML = appName;
     this.appName = appName;
   }
 
   ngOnInit() {}
+
+  logout() {
+    this.store.dispatch(new LogOutUser());
+  }
 }
