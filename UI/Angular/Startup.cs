@@ -21,7 +21,7 @@ namespace UI.Angular
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var connectionString = Configuration.GetConnectionString("Database");
+            //var connectionString = Configuration.GetConnectionString("Database");
             //services.AddSingleton<IUserProvider, UserProvider>(provider =>
             //{
             //    return new UserProvider(connectionString);
