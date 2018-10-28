@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using AmazonProjectAngular.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AmazonProject.Controllers
+namespace UI.Angular.Controllers
 {
     [Route("api/[controller]")]
     public class ProductsController : Controller
