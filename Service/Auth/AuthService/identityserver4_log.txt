@@ -491,3 +491,4 @@ C:\Users\Duc Truong\source\repos\AmazonProject\Service\Auth\AuthService\Views\Ac
 2018-10-31 02:06:35.443 -05:00 [INF] Clearing 0 tokens
 2018-10-31 02:07:05.455 -05:00 [INF] Clearing 0 tokens
 2018-10-31 02:07:35.467 -05:00 [INF] Clearing 0 tokens
+2018-10-31 02:08:05.474 -05:00 [INF] Clearing 0 tokens
