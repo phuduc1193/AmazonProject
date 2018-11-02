@@ -4,9 +4,9 @@ namespace Common.Interfaces
 {
     public interface IUserProvider
     {
-        UserCredential GetUserCredentialByUsername(string username);
+        UserCredential GetUserCredentialByUsername(string userName);
         UserCredential GetUserCredentialByRefreshToken(string token);
-        void UpdateTokenByUsername(string username, CredentialSchema credentialSchema);
+        void UpdateTokenByUsername(string userName, CredentialSchema credentialSchema);
         void CreateUserCredential(UserCredential userCredential);
     }
 }

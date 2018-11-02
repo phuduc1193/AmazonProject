@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace IdentityServer4Test.Data.Migrations
+namespace AuthService.Migrations
 {
     [DbContext(typeof(UserDbContext))]
     [Migration("20180109192453_CreateIdentitySchema")]

@@ -6,12 +6,13 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using AuthService.Helpers;
 using AuthService.Helpers.Account;
+using AuthService.Models;
+using AuthService.Services;
 using AuthService.ViewModels;
 using IdentityModel;
 using IdentityServer4.Events;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,24 +24,25 @@ namespace AuthService.Controllers
     [AllowAnonymous]
     public class ExternalController : Controller
     {
-        private readonly TestUserStore _users;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
         private readonly IEventService _events;
+        private readonly IClientStore _clientStore;
+        private readonly IIdentityServerInteractionService _interaction;
+        private readonly ILoginService<ApplicationUser> _loginService;
+        private readonly IRegistrationService<ApplicationUser> _registrationService;
 
         public ExternalController(
-            IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IEventService events,
-            TestUserStore users = null)
+            IIdentityServerInteractionService interaction,
+            ILoginService<ApplicationUser> loginService,
+            IRegistrationService<ApplicationUser> registrationService
+            )
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
-
-            _interaction = interaction;
             _clientStore = clientStore;
             _events = events;
+            _interaction = interaction;
+            _loginService = loginService;
+            _registrationService = registrationService;
         }
 
         /// <summary>
@@ -94,13 +96,15 @@ namespace AuthService.Controllers
             }
 
             // lookup our user and external provider info
-            var (user, provider, providerUserId, claims) = FindUserFromExternalProvider(result);
+            var (user, provider, providerUserId, claims) = await FindUserFromExternalProviderAsync(result);
+            // create new user
             if (user == null)
             {
-                // this might be where you might initiate a custom workflow for user registration
-                // in this sample we don't show how that would be done, as our sample implementation
-                // simply auto-provisions new external user
-                user = AutoProvisionUser(provider, providerUserId, claims);
+                var success = await _registrationService.ExternalCreateAsync(provider, providerUserId, claims);
+                // something wrong happens
+                if (!success)
+                    return RedirectToAction("Login", "Account");
+                user = await _loginService.FindUserByExternalProviderAsync(provider, providerUserId);
             }
 
             // this allows us to collect any additonal claims or properties
@@ -113,8 +117,8 @@ namespace AuthService.Controllers
             ProcessLoginCallbackForSaml2p(result, additionalLocalClaims, localSignInProps);
 
             // issue authentication cookie for user
-            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.SubjectId, user.Username));
-            await HttpContext.SignInAsync(user.SubjectId, user.Username, provider, localSignInProps, additionalLocalClaims.ToArray());
+            await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, user.UserName));
+            await HttpContext.SignInAsync(user.Id, user.UserName, provider, localSignInProps, additionalLocalClaims.ToArray());
 
             // delete temporary cookie used during external authentication
             await HttpContext.SignOutAsync(IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme);
@@ -184,7 +188,7 @@ namespace AuthService.Controllers
             }
         }
 
-        private (TestUser user, string provider, string providerUserId, IEnumerable<Claim> claims) FindUserFromExternalProvider(AuthenticateResult result)
+        private async Task<(ApplicationUser user, string provider, string providerUserId, IEnumerable<Claim> claims)> FindUserFromExternalProviderAsync(AuthenticateResult result)
         {
             var externalUser = result.Principal;
 
@@ -203,15 +207,9 @@ namespace AuthService.Controllers
             var providerUserId = userIdClaim.Value;
 
             // find external user
-            var user = _users.FindByExternalProvider(provider, providerUserId);
+            var user = await _loginService.FindUserByExternalProviderAsync(provider, providerUserId);
 
             return (user, provider, providerUserId, claims);
-        }
-
-        private TestUser AutoProvisionUser(string provider, string providerUserId, IEnumerable<Claim> claims)
-        {
-            var user = _users.AutoProvisionUser(provider, providerUserId, claims.ToList());
-            return user;
         }
 
         private void ProcessLoginCallbackForOidc(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace AuthService.Migrations.IdentityServer.ConfigurationDb
+namespace AuthService.Migrations
 {
     public partial class Config : Migration
     {
@@ -16,7 +16,7 @@ namespace AuthService.Migrations.IdentityServer.ConfigurationDb
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
                     DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false)
+                    Name = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,7 @@ namespace AuthService.Migrations.IdentityServer.ConfigurationDb
                     BackChannelLogoutSessionRequired = table.Column<bool>(type: "INTEGER", nullable: false),
                     BackChannelLogoutUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     ClientClaimsPrefix = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
-                    ClientId = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    ClientId = table.Column<string>(maxLength: 200, nullable: false),
                     ClientName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     ClientUri = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     ConsentLifetime = table.Column<int>(type: "INTEGER", nullable: true),
@@ -79,7 +79,7 @@ namespace AuthService.Migrations.IdentityServer.ConfigurationDb
                     DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     Emphasize = table.Column<bool>(type: "INTEGER", nullable: false),
                     Enabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
                     Required = table.Column<bool>(type: "INTEGER", nullable: false),
                     ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
@@ -118,7 +118,7 @@ namespace AuthService.Migrations.IdentityServer.ConfigurationDb
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
                     DisplayName = table.Column<string>(type: "TEXT", maxLength: 200, nullable: true),
                     Emphasize = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
                     Required = table.Column<bool>(type: "INTEGER", nullable: false),
                     ShowInDiscoveryDocument = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
