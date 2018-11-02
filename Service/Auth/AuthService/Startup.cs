@@ -9,6 +9,8 @@ using IdentityServer4;
 using AuthService.Models;
 using Microsoft.AspNetCore.Identity;
 using AuthService.Data;
+using AuthService.Helpers;
+using AuthService.Services;
 
 namespace AuthService
 {
@@ -36,7 +38,7 @@ namespace AuthService
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            services.AddDbContext<UserDbContext>(options => options.UseSqlite(connectionString));
+            services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<UserDbContext>()
@@ -50,18 +52,19 @@ namespace AuthService
                 options.Events.RaiseSuccessEvents = true;
             })
                 .AddAspNetIdentity<ApplicationUser>()
+                .AddProfileService<ApplicationProfileService>()
                     // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlite(connectionString,
+                        builder.UseSqlServer(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlite(connectionString,
+                        builder.UseSqlServer(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
 
                     // this enables automatic token cleanup. this is optional.
@@ -70,7 +73,7 @@ namespace AuthService
                 });
 
             services.AddAuthentication()
-                .AddGoogle("google-plus", Configuration["Authentication:Google:DisplayName"], options =>
+                .AddGoogle(Const.ExternalProvider.Google, Configuration["Authentication:Google:DisplayName"], options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 
@@ -91,6 +94,9 @@ namespace AuthService
             {
                 throw new Exception("need to configure key material");
             }
+
+            services.AddTransient<ILoginService<ApplicationUser>, LoginService>();
+            services.AddTransient<IRegistrationService<ApplicationUser>, RegistrationService>();
         }
 
         public void Configure(IApplicationBuilder app)

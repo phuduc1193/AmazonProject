@@ -1,5 +1,7 @@
 using AuthService.Helpers;
 using AuthService.Helpers.Account;
+using AuthService.Models;
+using AuthService.Services;
 using AuthService.ViewModels;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -7,10 +9,10 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -18,36 +20,35 @@ using System.Threading.Tasks;
 
 namespace AuthService.Controllers
 {
-    /// <summary>
-    /// This sample controller implements a typical login/logout/provision workflow for local and external accounts.
-    /// The login service encapsulates the interactions with the user data store. This data store is in-memory only and cannot be used for production!
-    /// The interaction service provides a way for the UI to communicate with identityserver for validation and context retrieval
-    /// </summary>
     [SecurityHeaders]
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IClientStore _clientStore;
         private readonly IEventService _events;
+        private readonly IIdentityServerInteractionService _interaction;
+        private readonly ILoginService<ApplicationUser> _loginService;
+        private readonly IRegistrationService<ApplicationUser> _registrationService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountController(
-            IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
+            IClientStore clientStore,
             IEventService events,
-            TestUserStore users = null)
+            IIdentityServerInteractionService interaction,
+            ILoginService<ApplicationUser> loginService,
+            IRegistrationService<ApplicationUser>  registrationService,
+            UserManager<ApplicationUser> userManager
+            )
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
-
-            _interaction = interaction;
-            _clientStore = clientStore;
             _schemeProvider = schemeProvider;
+            _clientStore = clientStore;
             _events = events;
+            _interaction = interaction;
+            _loginService = loginService;
+            _registrationService = registrationService;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -56,7 +57,6 @@ namespace AuthService.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
 
             if (vm.IsExternalLoginOnly)
@@ -75,48 +75,23 @@ namespace AuthService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
+            // the user clicked the "register" button
+            if (string.Equals(button, "register", StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToAction("Register", new { returnUrl = model.ReturnUrl });
+
             // check if we are in the context of an authorization request
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
             // the user clicked the "cancel" button
-            if (button == "cancel")
-            {
-                if (context != null)
-                {
-                    // if the user cancels, send a result back into IdentityServer as if they 
-                    // denied the consent (even if this client does not require consent).
-                    // this will send back an access denied OIDC error response to the client.
-                    await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
-
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                    if (await _clientStore.IsPkceClientAsync(context.ClientId))
-                    {
-                        // if the client is PKCE then we assume it's native, so this change in how to
-                        // return the response is for better UX for the end user.
-                        return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
-                    }
-
-                    return Redirect(model.ReturnUrl);
-                }
-                else
-                {
-                    // since we don't have a valid context, then we just go back to the home page
-                    return Redirect("~/");
-                }
-            }
-
-            if (button == "register")
-            {
-                return RedirectToAction("Register", new { returnUrl = model.ReturnUrl });
-            }
+            if (string.Equals(button, "cancel", StringComparison.InvariantCultureIgnoreCase))
+                return await HandleCancelActionAsync(context, model.ReturnUrl);
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                var user = await _loginService.FindByUsernameAsync(model.Username);
+                if (await _loginService.ValidateCredentialsAsync(user, model.Password))
                 {
-                    var user = _users.FindByUsername(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
+                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.FullName));
 
                     // only set explicit expiration here if user chooses "remember me". 
                     // otherwise we rely upon expiration configured in cookie middleware.
@@ -131,7 +106,7 @@ namespace AuthService.Controllers
                     };
 
                     // issue authentication cookie with subject ID and username
-                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+                    await HttpContext.SignInAsync(user.Id, user.UserName, props);
 
                     if (context != null)
                     {
@@ -171,6 +146,28 @@ namespace AuthService.Controllers
             return View(vm);
         }
 
+        private async Task<IActionResult> HandleCancelActionAsync(AuthorizationRequest context, string returnUrl)
+        {
+            // since we don't have a valid context, then we just go back to the home page
+            if (context == null)
+                return Redirect("~/");
+
+            // if the user cancels, send a result back into IdentityServer as if they 
+            // denied the consent (even if this client does not require consent).
+            // this will send back an access denied OIDC error response to the client.
+            await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+
+            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+            if (await _clientStore.IsPkceClientAsync(context.ClientId))
+            {
+                // if the client is PKCE then we assume it's native, so this change in how to
+                // return the response is for better UX for the end user.
+                return View("Redirect", new RedirectViewModel { RedirectUrl = returnUrl });
+            }
+
+            return Redirect(returnUrl);
+        }
+
         /// <summary>
         /// Entry point into the register workflow
         /// </summary>
@@ -199,41 +196,31 @@ namespace AuthService.Controllers
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
             // the user clicked the "cancel" button
-            if (button == "cancel")
-            {
-                if (context != null)
-                {
-                    // if the user cancels, send a result back into IdentityServer as if they 
-                    // denied the consent (even if this client does not require consent).
-                    // this will send back an access denied OIDC error response to the client.
-                    await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
-
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                    if (await _clientStore.IsPkceClientAsync(context.ClientId))
-                    {
-                        // if the client is PKCE then we assume it's native, so this change in how to
-                        // return the response is for better UX for the end user.
-                        return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
-                    }
-
-                    return Redirect(model.ReturnUrl);
-                }
-                else
-                {
-                    // since we don't have a valid context, then we just go back to the home page
-                    return Redirect("~/");
-                }
-            }
+            if (string.Equals(button, "cancel", StringComparison.InvariantCultureIgnoreCase))
+                return await HandleCancelActionAsync(context, model.ReturnUrl);
 
             if (ModelState.IsValid)
             {
-                // TODO: Register
-                return RedirectToAction("Login", new { returnUrl = model.ReturnUrl });
+                var user = ConvertToApplicationUser(model);
+                var success = await _registrationService.CreateAsync(user, model.Password);
+                if (success)
+                    return RedirectToAction("Login", new { returnUrl = model.ReturnUrl });
             }
 
             // something went wrong, show form with error
             var vm = await BuildRegisterViewModelAsync(model);
             return View(vm);
+        }
+
+        private static ApplicationUser ConvertToApplicationUser(RegisterInputModel model)
+        {
+            return new ApplicationUser
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                UserName = model.Username,
+                Email = model.Email
+            };
         }
 
         /// <summary>
@@ -269,6 +256,7 @@ namespace AuthService.Controllers
             {
                 // delete local authentication cookie
                 await HttpContext.SignOutAsync();
+                await _loginService.SignOutAsync();
 
                 // raise the logout event
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
