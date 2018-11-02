@@ -146,28 +146,6 @@ namespace AuthService.Controllers
             return View(vm);
         }
 
-        private async Task<IActionResult> HandleCancelActionAsync(AuthorizationRequest context, string returnUrl)
-        {
-            // since we don't have a valid context, then we just go back to the home page
-            if (context == null)
-                return Redirect("~/");
-
-            // if the user cancels, send a result back into IdentityServer as if they 
-            // denied the consent (even if this client does not require consent).
-            // this will send back an access denied OIDC error response to the client.
-            await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
-
-            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-            if (await _clientStore.IsPkceClientAsync(context.ClientId))
-            {
-                // if the client is PKCE then we assume it's native, so this change in how to
-                // return the response is for better UX for the end user.
-                return View("Redirect", new RedirectViewModel { RedirectUrl = returnUrl });
-            }
-
-            return Redirect(returnUrl);
-        }
-
         /// <summary>
         /// Entry point into the register workflow
         /// </summary>
@@ -210,17 +188,6 @@ namespace AuthService.Controllers
             // something went wrong, show form with error
             var vm = await BuildRegisterViewModelAsync(model);
             return View(vm);
-        }
-
-        private static ApplicationUser ConvertToApplicationUser(RegisterInputModel model)
-        {
-            return new ApplicationUser
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.Username,
-                Email = model.Email
-            };
         }
 
         /// <summary>
@@ -277,11 +244,17 @@ namespace AuthService.Controllers
             return View("LoggedOut", vm);
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            return View();
+        }
 
 
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
+        #region Helpers
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
@@ -461,5 +434,39 @@ namespace AuthService.Controllers
 
             return vm;
         }
+
+        private static ApplicationUser ConvertToApplicationUser(RegisterInputModel model)
+        {
+            return new ApplicationUser
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                UserName = model.Username,
+                Email = model.Email
+            };
+        }
+
+        private async Task<IActionResult> HandleCancelActionAsync(AuthorizationRequest context, string returnUrl)
+        {
+            // since we don't have a valid context, then we just go back to the home page
+            if (context == null)
+                return Redirect("~/");
+
+            // if the user cancels, send a result back into IdentityServer as if they 
+            // denied the consent (even if this client does not require consent).
+            // this will send back an access denied OIDC error response to the client.
+            await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+
+            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+            if (await _clientStore.IsPkceClientAsync(context.ClientId))
+            {
+                // if the client is PKCE then we assume it's native, so this change in how to
+                // return the response is for better UX for the end user.
+                return View("Redirect", new RedirectViewModel { RedirectUrl = returnUrl });
+            }
+
+            return Redirect(returnUrl);
+        }
+        #endregion
     }
 }

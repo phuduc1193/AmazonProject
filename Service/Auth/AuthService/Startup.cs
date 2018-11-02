@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using IdentityServer4;
 using AuthService.Models;
@@ -36,7 +35,6 @@ namespace AuthService
             });
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -44,48 +42,7 @@ namespace AuthService
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
 
-            var identityServer = services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-            })
-                .AddAspNetIdentity<ApplicationUser>()
-                .AddProfileService<ApplicationProfileService>()
-                    // this adds the config data from DB (clients, resources, CORS)
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
-                // this adds the operational data from DB (codes, tokens, consents)
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-
-                    // this enables automatic token cleanup. this is optional.
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30;
-                });
-
-            services.AddAuthentication()
-                .AddGoogle(Const.ExternalProvider.Google, Configuration["Authentication:Google:DisplayName"], options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                //})
-                //.AddFacebook("Facebook", Configuration["Authentication:Facebook:DisplayName"], options =>
-                //{
-                //    options.AppId = Configuration["Authentication:Facebook:AppId"];
-                //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                });
-
+            var identityServer = Config.IdentityServer(services, Configuration, connectionString);
             if (Environment.IsDevelopment())
             {
                 identityServer.AddDeveloperSigningCredential();
@@ -94,6 +51,20 @@ namespace AuthService
             {
                 throw new Exception("need to configure key material");
             }
+
+            services.AddAuthentication()
+                .AddGoogle(Const.ExternalProvider.Google, Configuration["Authentication:Google:DisplayName"], options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                    //})
+                    //.AddFacebook("Facebook", Configuration["Authentication:Facebook:DisplayName"], options =>
+                    //{
+                    //    options.AppId = Configuration["Authentication:Facebook:AppId"];
+                    //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                });
 
             services.AddTransient<ILoginService<ApplicationUser>, LoginService>();
             services.AddTransient<IRegistrationService<ApplicationUser>, RegistrationService>();
