@@ -1,0 +1,40 @@
+﻿@model NewApiResourceViewModel
+
+@{
+    ViewData["Title"] = "New API Resource";
+}
+<div class="page-header">
+    <h3>New API Resource</h3>
+</div>
+@Html.Partial("_ValidationSummary")
+<div class="card">
+    <div class="card-header">
+        Information
+    </div>
+    <div class="card-body">
+        <form asp-route="New">
+            <fieldset>
+                <input class="invisible" asp-for="SerializedScopes" />
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label asp-for="Name"></label>
+                        <input class="form-control" placeholder="ex: authentication.api" asp-for="Name"
+                               autofocus>
+                    </div>
+                    <div class="form-group col-md-7">
+                        <label asp-for="DisplayName"></label>
+                        <input class="form-control" placeholder="ex: Authentication API Gateway" asp-for="DisplayName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    @Html.TextArea("Description", null, new { @class = "form-control" })
+                </div>
+                @Html.Partial("_ScopeTable", Model?.Scopes)
+                <div class="form-group">
+                    <button class="btn btn-success" name="button" value="create">Create</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

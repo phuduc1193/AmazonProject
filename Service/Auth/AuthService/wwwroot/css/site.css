@@ -80,3 +80,20 @@
 .grants .grant li:last-child:after {
   content: '';
 }
+td.table-input input {
+    display: block !important;
+    border: 0 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+}
+td.table-input input:focus {
+    box-shadow: none;
+}
+td .table-input {
+margin: 0 !important;
+padding: 0 !important;
+}
+td.table-input input[type="checkbox"] {
+    margin: 10px 50% !important;
+    transform: translate(-50%, 0) !important;
+}

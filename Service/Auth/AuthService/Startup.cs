@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using AuthService.Data;
 using AuthService.Helpers;
 using AuthService.Services;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Linq;
 
 namespace AuthService
 {
@@ -68,6 +70,7 @@ namespace AuthService
 
             services.AddTransient<ILoginService<ApplicationUser>, LoginService>();
             services.AddTransient<IRegistrationService<ApplicationUser>, RegistrationService>();
+            services.AddTransient<IApiResourceService, ApiResourceService>();
         }
 
         public void Configure(IApplicationBuilder app)
