@@ -7,7 +7,7 @@
     }
 }
 <!DOCTYPE html>
-<html>
+<html ng-csp ng-app="authServiceApp">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="~/lib/fontawesome/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <script src="~/lib/angularjs/angular.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-light bg-light fixed-top navbar-expand-md border-bottom p-2">
@@ -67,7 +69,9 @@
     </div>
 
     <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/popperjs/popper.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/bootbox/bootbox.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1,40 +1,89 @@
-﻿@model NewApiResourceViewModel
-
-@{
+﻿@{
     ViewData["Title"] = "New API Resource";
 }
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+<input type="hidden" id="RequestVerificationToken"
+       name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+
 <div class="page-header">
     <h3>New API Resource</h3>
 </div>
-@Html.Partial("_ValidationSummary")
-<div class="card">
+<div class="card" ng-controller="NewApiResourceController as api">
     <div class="card-header">
         Information
     </div>
     <div class="card-body">
-        <form asp-route="New">
-            <fieldset>
-                <input class="invisible" asp-for="SerializedScopes" />
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label asp-for="Name"></label>
-                        <input class="form-control" placeholder="ex: authentication.api" asp-for="Name"
-                               autofocus>
-                    </div>
-                    <div class="form-group col-md-7">
-                        <label asp-for="DisplayName"></label>
-                        <input class="form-control" placeholder="ex: Authentication API Gateway" asp-for="DisplayName">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description"></label>
-                    @Html.TextArea("Description", null, new { @class = "form-control" })
-                </div>
-                @Html.Partial("_ScopeTable", Model?.Scopes)
-                <div class="form-group">
-                    <button class="btn btn-success" name="button" value="create">Create</button>
-                </div>
-            </fieldset>
-        </form>
+        <div class="form-row">
+            <div class="form-group col-md-5">
+                <label>Name</label>
+                <input ng-model="api.Name" class="form-control text-primary" placeholder="ex: authentication.api" autofocus>
+            </div>
+            <div class="form-group col-md-7">
+                <label>Display Name</label>
+                <input ng-model="api.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea ng-model="api.Description" class="form-control text-primary"></textarea>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header align-content-center d-flex justify-content-between">
+                <b class="align-self-center">Api Scopes</b>
+                <button class="btn btn-info" ng-click="api.addScope()">Add scope</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <thead class="text-black-50">
+                        <tr>
+                            <th>
+                                Name <small class="px-1"><i class="fas fa-info-circle" title="Unique across all API resources"></i></small>
+                            </th>
+                            <th>Display Name</th>
+                            <th>Description</th>
+                            <th>Required</th>
+                            <th>Emphasize</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="content">
+                        <tr ng-repeat="scope in api.Scopes track by $index">
+                            <td class="table-input">
+                                <input ng-model="scope.Name" type="text" class="form-control text-primary">
+                            </td>
+                            <td class="table-input">
+                                <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
+                            </td>
+                            <td class="table-input">
+                                <input ng-model="scope.Description" type="text" class="form-control text-primary">
+                            </td>
+                            <td class="table-input">
+                                <input ng-model="scope.Required" type="checkbox">
+                            </td>
+                            <td class="table-input">
+                                <input ng-model="scope.Emphasize" type="checkbox">
+                            </td>
+                            <td class="align-middle text-center">
+                                <a class="text-danger" href="#" ng-click="api.removeScope($index)"><i class="fas fa-minus-circle"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success" ng-click="api.create()">Create</button>
+            <a id="cancel" class="btn btn-light float-right" asp-controller="ApiResources" asp-action="Index">Cancel</a>
+        </div>
     </div>
 </div>
+
+<script src="~/js/ApiResources/NewApiResourceController.js"></script>

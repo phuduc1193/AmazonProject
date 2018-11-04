@@ -1,4 +1,5 @@
-﻿using AuthService.Helpers;
+﻿using AuthService.Data;
+using AuthService.Helpers;
 using AuthService.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,17 +24,17 @@ namespace AuthService
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<ApplicationProfileService>()
                 // this adds the config data from DB (clients, resources, CORS)
-                .AddConfigurationStore(options =>
+                .AddConfigurationStore<CustomConfigurationDbContext>(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
+                        builder.UseSqlite(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
+                        builder.UseSqlite(connectionString,
                             sql => sql.MigrationsAssembly(migrationsAssembly));
 
                     // this enables automatic token cleanup. this is optional.
