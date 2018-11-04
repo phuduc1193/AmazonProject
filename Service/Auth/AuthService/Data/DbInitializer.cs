@@ -12,7 +12,7 @@ namespace AuthService.Data
             using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
-                scope.ServiceProvider.GetService<ConfigurationDbContext>().Database.Migrate();
+                scope.ServiceProvider.GetService<CustomConfigurationDbContext>().Database.Migrate();
                 scope.ServiceProvider.GetService<UserDbContext>().Database.Migrate();
             }
         }

@@ -38,7 +38,7 @@ namespace AuthService
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<UserDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<UserDbContext>(options => options.UseSqlite(connectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<UserDbContext>()
@@ -71,6 +71,8 @@ namespace AuthService
             services.AddTransient<ILoginService<ApplicationUser>, LoginService>();
             services.AddTransient<IRegistrationService<ApplicationUser>, RegistrationService>();
             services.AddTransient<IApiResourceService, ApiResourceService>();
+
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }
 
         public void Configure(IApplicationBuilder app)

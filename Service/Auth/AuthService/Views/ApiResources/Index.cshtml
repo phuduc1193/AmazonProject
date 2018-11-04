@@ -7,22 +7,61 @@
 <div class="page-header">
     <h3>API Resources</h3>
 </div>
-@if (Model.ApiResources.Count == 0)
-{
-    <div class="row">
+<div class="row">
+
+    @if (Model.ApiResources.Count == 0)
+    {
         <div class="col-lg-4 col-md-6">
             <div class="alert alert-light">
                 There is no API Resources available.
             </div>
         </div>
-        <div class="col-sm-12">
-            <a class="btn btn-success pull-right"
-                asp-controller="ApiResources"
-                asp-action="New">Add API Resource</a>
+    }
+    else
+    {
+        <div class="col-12">
+            <table id="dataTable" class="table table-hover table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="text-center" scope="col">#</th>
+                        <th scope="col">API Name</th>
+                        <th scope="col">Display Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Enabled</th>
+                        <th scope="col">Scopes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var apiResource in Model.ApiResources)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row">@apiResource.Id</th>
+                            <td>@apiResource.Name</td>
+                            <td>@apiResource.DisplayName</td>
+                            <td>@apiResource.Description</td>
+                            <td>
+                                @if (apiResource.Enabled)
+                                {
+                                    <span>Yes</span>
+                                }
+                            </td>
+                            <td></td>
+                            <td class="align-middle text-center">
+                                <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@apiResource.Id"
+                                    data-toggle="tooltip" data-placement="top" title="Edit resource @apiResource.Name">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
+    }
+    <div class="col-sm-12">
+        <a class="btn btn-success pull-right"
+           asp-controller="ApiResources"
+           asp-action="New">Add API Resource</a>
     </div>
-}
-else
-{
-
-}
+</div>

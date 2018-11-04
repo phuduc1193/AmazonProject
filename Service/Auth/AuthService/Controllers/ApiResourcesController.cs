@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using AuthService.Helpers;
 using AuthService.Services;
 using AuthService.ViewModels;
 using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace AuthService.Controllers
@@ -33,97 +33,70 @@ namespace AuthService.Controllers
         }
 
         [HttpGet]
-        public IActionResult New(NewApiResourceInputModel model)
+        public IActionResult New()
         {
-            var vm = new NewApiResourceViewModel
-            {
-                Scopes = new List<NewApiResourceScopeViewModel>()
-            };
-            return View(vm);
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> New(NewApiResourceInputModel model, string button)
+        public async Task<IActionResult> New([FromBody] ApiResource apiResource)
         {
-            if (string.Equals(button, "scope", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var vm = BuildApiResourceViewModel(model);
-                return View(vm);
-            }
-
-            var apiResource = BuildApiResourceModel(model);
-            var success = await _service.SaveApiResourceAsync(apiResource);
-            if (!success)
-                return View();
-            return RedirectToAction("Index");
+            apiResource = AddScopeIfEmpty(apiResource);
+            var success = await _service.AddApiResourceAsync(apiResource);
+            if (success)
+                return Success();
+            return Error();
         }
 
-        private NewApiResourceViewModel BuildApiResourceViewModel(NewApiResourceInputModel model)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            var vm = new NewApiResourceViewModel
-            {
-                Name = model.Name,
-                DisplayName = model.DisplayName,
-                Description = model.Description,
-                Scopes = !string.IsNullOrWhiteSpace(model.SerializedScopes) ?
-                    DeserializeListScopes(model.SerializedScopes) : new List<NewApiResourceScopeViewModel>()
-            };
+            var jsonSerializerSettings = new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+            var apiResource = await _service.GetApiResourceByIdAsync(id);
+            var jsonString = JsonConvert.SerializeObject(apiResource, Formatting.None, jsonSerializerSettings);
+            ViewData["Data"] = jsonString;
+            return View();
+        }
 
-            if (!string.IsNullOrWhiteSpace(model.ScopeName)
-                || !string.IsNullOrWhiteSpace(model.ScopeDisplayName)
-                || !string.IsNullOrWhiteSpace(model.ScopeDescription))
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromBody] ApiResource apiResource)
+        {
+            apiResource = AddScopeIfEmpty(apiResource);
+            var success = await _service.UpdateApiResourceAsync(apiResource);
+            if (success)
+                return Success();
+            return Error();
+        }
+
+
+        private static ApiResource AddScopeIfEmpty(ApiResource apiResource)
+        {
+            if (apiResource.Scopes == null || apiResource.Scopes.Count == 0
+                || string.IsNullOrWhiteSpace(apiResource.Scopes.First().Name))
             {
-                var scope = new NewApiResourceScopeViewModel
-                {
-                    ScopeName = model.ScopeName,
-                    ScopeDisplayName = model.ScopeDisplayName,
-                    ScopeDescription = model.ScopeDescription,
-                    ScopeEmphasize = model.ScopeEmphasize,
-                    ScopeRequired = model.ScopeRequired
+                apiResource.Scopes = new List<ApiScope> {
+                    new ApiScope {
+                        Name = apiResource.Name,
+                        DisplayName = apiResource.DisplayName,
+                        Description = apiResource.Description,
+                        Emphasize = true,
+                        Required = true
+                    }
                 };
-                vm.Scopes.Add(scope);
-            }
-            vm.SerializedScopes = JsonConvert.SerializeObject(vm.Scopes);
-            return vm;
-        }
-
-        private static List<NewApiResourceScopeViewModel> DeserializeListScopes(string input)
-        {
-            return JsonConvert.DeserializeObject<List<NewApiResourceScopeViewModel>>(input);
-        }
-
-        private ApiResource BuildApiResourceModel(NewApiResourceInputModel model)
-        {
-            var apiResource = new ApiResource
-            {
-                Name = model.Name,
-                DisplayName = model.DisplayName,
-                Description = model.Description,
-                Enabled = true,
-                Scopes = new List<ApiScope>()
-            };
-
-            var scopes = DeserializeListScopes(model.SerializedScopes);
-            if (scopes.Count == 0)
-            {
-                apiResource.Scopes.Add(new ApiScope() { Name = model.Name, DisplayName = model.DisplayName });
-                return apiResource;
-            }
-
-            foreach (var scope in scopes)
-            {
-                apiResource.Scopes.Add(new ApiScope
-                {
-                    Name = scope.ScopeName,
-                    DisplayName = scope.ScopeDisplayName,
-                    Description = scope.ScopeDescription,
-                    Emphasize = scope.ScopeEmphasize,
-                    Required = scope.ScopeRequired,
-                    ShowInDiscoveryDocument = true
-                });
             }
             return apiResource;
+        }
+        private IActionResult Success()
+        {
+            Response.StatusCode = (int)HttpStatusCode.OK;
+            return Content("Success!", MediaTypeNames.Text.Plain);
+        }
+        private IActionResult Error()
+        {
+            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            return Content("Error!", MediaTypeNames.Text.Plain);
         }
     }
 }

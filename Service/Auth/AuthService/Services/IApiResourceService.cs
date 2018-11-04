@@ -7,6 +7,8 @@ namespace AuthService.Services
     public interface IApiResourceService
     {
         Task<List<ApiResource>> GetListApiResourcesAsync();
-        Task<bool> SaveApiResourceAsync(ApiResource apiResource);
+        Task<bool> AddApiResourceAsync(ApiResource apiResource);
+        Task<ApiResource> GetApiResourceByIdAsync(int id);
+        Task<bool> UpdateApiResourceAsync(ApiResource apiResource);
     }
 }
