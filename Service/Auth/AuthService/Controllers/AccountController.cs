@@ -1,7 +1,6 @@
 using AuthService.Helpers;
 using AuthService.Helpers.Account;
-using AuthService.Models;
-using AuthService.Services;
+using AuthService.Common.Models;
 using AuthService.ViewModels;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -17,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthService.Common.Interfaces.Services;
 
 namespace AuthService.Controllers
 {
@@ -28,8 +28,7 @@ namespace AuthService.Controllers
         private readonly IClientStore _clientStore;
         private readonly IEventService _events;
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly ILoginService<ApplicationUser> _loginService;
-        private readonly IRegistrationService<ApplicationUser> _registrationService;
+        private readonly IUserService<ApplicationUser> _userService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountController(
@@ -37,8 +36,7 @@ namespace AuthService.Controllers
             IClientStore clientStore,
             IEventService events,
             IIdentityServerInteractionService interaction,
-            ILoginService<ApplicationUser> loginService,
-            IRegistrationService<ApplicationUser>  registrationService,
+            IUserService<ApplicationUser> userService,
             UserManager<ApplicationUser> userManager
             )
         {
@@ -46,8 +44,7 @@ namespace AuthService.Controllers
             _clientStore = clientStore;
             _events = events;
             _interaction = interaction;
-            _loginService = loginService;
-            _registrationService = registrationService;
+            _userService = userService;
             _userManager = userManager;
         }
 
@@ -88,8 +85,8 @@ namespace AuthService.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = await _loginService.FindByUsernameAsync(model.Username);
-                if (await _loginService.ValidateCredentialsAsync(user, model.Password))
+                var user = await _userService.FindByUsernameAsync(model.Username);
+                if (await _userService.ValidateCredentialsAsync(user, model.Password))
                 {
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.FullName));
 
@@ -180,7 +177,7 @@ namespace AuthService.Controllers
             if (ModelState.IsValid)
             {
                 var user = ConvertToApplicationUser(model);
-                var success = await _registrationService.CreateAsync(user, model.Password);
+                var success = await _userService.CreateAsync(user, model.Password);
                 if (success)
                     return RedirectToAction("Login", new { returnUrl = model.ReturnUrl });
             }
@@ -223,7 +220,7 @@ namespace AuthService.Controllers
             {
                 // delete local authentication cookie
                 await HttpContext.SignOutAsync();
-                await _loginService.SignOutAsync();
+                await _userService.SignOutAsync();
 
                 // raise the logout event
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));

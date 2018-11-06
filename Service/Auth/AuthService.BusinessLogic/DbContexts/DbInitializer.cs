@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace AuthService.Data
+namespace AuthService.BusinessLogic.DbContexts
 {
     public class DbInitializer
     {

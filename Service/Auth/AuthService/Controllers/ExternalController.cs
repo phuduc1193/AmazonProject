@@ -6,8 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using AuthService.Helpers;
 using AuthService.Helpers.Account;
-using AuthService.Models;
-using AuthService.Services;
+using AuthService.Common.Models;
 using AuthService.ViewModels;
 using IdentityModel;
 using IdentityServer4.Events;
@@ -17,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AuthService.Common.Interfaces.Services;
 
 namespace AuthService.Controllers
 {
@@ -27,22 +27,19 @@ namespace AuthService.Controllers
         private readonly IEventService _events;
         private readonly IClientStore _clientStore;
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly ILoginService<ApplicationUser> _loginService;
-        private readonly IRegistrationService<ApplicationUser> _registrationService;
+        private readonly IUserService<ApplicationUser> _userService;
 
         public ExternalController(
             IClientStore clientStore,
             IEventService events,
             IIdentityServerInteractionService interaction,
-            ILoginService<ApplicationUser> loginService,
-            IRegistrationService<ApplicationUser> registrationService
+            IUserService<ApplicationUser> userService
             )
         {
             _clientStore = clientStore;
             _events = events;
             _interaction = interaction;
-            _loginService = loginService;
-            _registrationService = registrationService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -100,11 +97,11 @@ namespace AuthService.Controllers
             // create new user
             if (user == null)
             {
-                var success = await _registrationService.ExternalCreateAsync(provider, providerUserId, claims);
+                var success = await _userService.ExternalCreateAsync(provider, providerUserId, claims);
                 // something wrong happens
                 if (!success)
                     return RedirectToAction("Login", "Account");
-                user = await _loginService.FindUserByExternalProviderAsync(provider, providerUserId);
+                user = await _userService.FindUserByExternalProviderAsync(provider, providerUserId);
             }
 
             // this allows us to collect any additonal claims or properties
@@ -207,7 +204,7 @@ namespace AuthService.Controllers
             var providerUserId = userIdClaim.Value;
 
             // find external user
-            var user = await _loginService.FindUserByExternalProviderAsync(provider, providerUserId);
+            var user = await _userService.FindUserByExternalProviderAsync(provider, providerUserId);
 
             return (user, provider, providerUserId, claims);
         }

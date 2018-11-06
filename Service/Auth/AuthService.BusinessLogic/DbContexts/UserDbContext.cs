@@ -1,8 +1,8 @@
-﻿using AuthService.Models;
+﻿using AuthService.Common.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.Data
+namespace AuthService.BusinessLogic.DbContexts
 {
     public class UserDbContext : IdentityDbContext<ApplicationUser>
     {

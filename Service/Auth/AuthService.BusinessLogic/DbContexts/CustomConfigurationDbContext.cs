@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using AuthService.Common.Interfaces.Contexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.Data
+namespace AuthService.BusinessLogic.DbContexts
 {
-    public class CustomConfigurationDbContext : DbContext, IConfigurationDbContext
+    public class CustomConfigurationDbContext : DbContext, IConfigurationDbContext, ICustomConfigurationDbContext
     {
         public CustomConfigurationDbContext(DbContextOptions<CustomConfigurationDbContext> options)
             : base(options) { }

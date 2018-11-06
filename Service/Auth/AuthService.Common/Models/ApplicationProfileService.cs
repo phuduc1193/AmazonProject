@@ -1,4 +1,4 @@
-﻿using AuthService.Models;
+﻿using AuthService.Common.Models;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AuthService.Helpers
+namespace AuthService.Common.Models
 {
     public class ApplicationProfileService : IProfileService
     {

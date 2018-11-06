@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Text;
 
-namespace AuthService.Models
+namespace AuthService.Common.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; internal set; }
-        public string LastName { get; internal set; }
-        public string MiddleName { get; internal set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
         public string FullName {
             get
             {
@@ -21,7 +21,7 @@ namespace AuthService.Models
                 return sb.ToString().Trim();
             }
         }
-        public string ExternalProvider { get; internal set; }
-        public string ExternalProviderId { get; internal set; }
+        public string ExternalProvider { get; set; }
+        public string ExternalProviderId { get; set; }
     }
 }

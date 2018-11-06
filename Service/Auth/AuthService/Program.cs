@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using System;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.AspNetCore;
 using Serilog.Events;
-using AuthService.Data;
+using AuthService.BusinessLogic.DbContexts;
 
 namespace AuthService
 {
@@ -12,7 +11,6 @@ namespace AuthService
     {
         public static void Main(string[] args)
         {
-            Console.Title = "IdentityServer4.EntityFramework";
             var host = BuildWebHost(args);
             DbInitializer.Initialize(host.Services);
             host.Run();
@@ -30,7 +28,7 @@ namespace AuthService
                             .MinimumLevel.Override("System", LogEventLevel.Warning)
                             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
                             .Enrich.FromLogContext()
-                            .WriteTo.File(@"identityserver4_log.txt")
+                            //.WriteTo.File(@"identityserver4_log.txt")
                             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate);
                     })
                     .Build();

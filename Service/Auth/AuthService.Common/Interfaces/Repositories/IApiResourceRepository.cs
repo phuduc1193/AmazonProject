@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AuthService.Services
+namespace AuthService.Common.Interfaces.Repositories
 {
-    public interface IApiResourceService
+    public interface IApiResourceRepository
     {
         Task<List<ApiResource>> GetListApiResourcesAsync();
-        Task<bool> AddApiResourceAsync(ApiResource apiResource);
+        Task<int> AddApiResourceAsync(ApiResource apiResource);
         Task<ApiResource> GetApiResourceByIdAsync(int id);
-        Task<bool> UpdateApiResourceAsync(ApiResource apiResource);
+        Task<int> UpdateApiResourceAsync(ApiResource apiResource);
     }
 }

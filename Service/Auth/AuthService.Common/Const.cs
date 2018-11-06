@@ -1,4 +1,4 @@
-﻿namespace AuthService.Helpers
+﻿namespace AuthService.Common
 {
     public class Const
     {
@@ -6,5 +6,7 @@
         {
             public const string Google = "google";
         }
+
+        public const string ConnectionString = "DefaultConnection";
     }
 }
