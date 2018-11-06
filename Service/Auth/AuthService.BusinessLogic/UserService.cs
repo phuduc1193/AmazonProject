@@ -7,11 +7,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthService.Common.Interfaces.Services;
 using AuthService.Common;
+using AuthService.Common.Interfaces.Models;
 
 namespace AuthService.BusinessLogic
 {
     public class UserService<TUser> : IUserService<TUser>
-        where TUser : class
+        where TUser : class, IApplicationUser
     {
         private UserManager<TUser> _userManager;
         private SignInManager<TUser> _signInManager;

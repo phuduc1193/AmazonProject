@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using AuthService.Common.Interfaces.Models;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AuthService.Common.Interfaces.Services
 {
     public interface IUserService<TUser>
-        where TUser : class
+        where TUser : class, IApplicationUser
     {
         Task<bool> ValidateCredentialsAsync(TUser user, string password);
         Task<TUser> FindByUsernameAsync(string userName);

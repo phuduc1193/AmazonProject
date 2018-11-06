@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using AuthService.Common;
 using AuthService.Common.Interfaces.Services;
 using AuthService.Helpers;
 using AuthService.ViewModels;
@@ -14,8 +15,7 @@ using Newtonsoft.Json;
 namespace AuthService.Controllers
 {
     [SecurityHeaders]
-    //[Authorize(Roles = "Administrator")]
-    [Authorize]
+    [Authorize(Roles = Const.DefaultRoles.Admin)]
     public class ApiResourcesController : Controller
     {
         private IApiResourceService _service;

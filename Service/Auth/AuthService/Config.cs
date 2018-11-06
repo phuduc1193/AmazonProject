@@ -15,6 +15,7 @@ using AuthService.DataAccess;
 using AuthService.Common.Interfaces.Repositories;
 using AuthService.Common.Interfaces.Contexts;
 using AuthService.BusinessLogic.DbContexts;
+using AuthService.Common.Interfaces.Models;
 
 namespace AuthService
 {
@@ -29,8 +30,8 @@ namespace AuthService
 
         public static IServiceCollection AddAuthenticationServices<TContext, TUser, TRole, TProfileService, TConfigurationDbContext>(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
             where TContext : DbContext
-            where TUser : class
-            where TRole : class
+            where TUser : class, IApplicationUser
+            where TRole : class, IApplicationRole
             where TProfileService : class, IProfileService
             where TConfigurationDbContext : DbContext, IConfigurationDbContext
         {
@@ -44,6 +45,7 @@ namespace AuthService
             });
 
             services.AddIdentity<TUser, TRole>()
+                .AddRoleManager<RoleManager<TRole>>()
                 .AddEntityFrameworkStores<TContext>()
                 .AddDefaultTokenProviders();
 
@@ -85,7 +87,7 @@ namespace AuthService
         }
 
         public static IServiceCollection AddDependencies<TUser>(this IServiceCollection services)
-            where TUser : class
+            where TUser : class, IApplicationUser
         {
             services.AddTransient<ICustomConfigurationDbContext, CustomConfigurationDbContext>();
 

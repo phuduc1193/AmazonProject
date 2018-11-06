@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.BusinessLogic.DbContexts
 {
-    public class UserDbContext : IdentityDbContext<ApplicationUser>
+    public class UserDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 

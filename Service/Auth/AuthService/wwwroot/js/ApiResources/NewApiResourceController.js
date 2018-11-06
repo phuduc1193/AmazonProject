@@ -11,6 +11,7 @@
         api.Name = "";
         api.DisplayName = "";
         api.Description = "";
+        api.Enabled = true;
         api.Scopes = [angular.copy(defaultScope)];
 
         api.addScope = function () {

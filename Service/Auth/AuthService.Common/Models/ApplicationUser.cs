@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AuthService.Common.Interfaces.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Text;
 
 namespace AuthService.Common.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IApplicationUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
