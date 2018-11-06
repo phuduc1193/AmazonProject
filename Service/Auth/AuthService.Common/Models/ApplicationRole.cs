@@ -1,5 +1,6 @@
 ﻿using AuthService.Common.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace AuthService.Common.Models
 {
@@ -12,5 +13,7 @@ namespace AuthService.Common.Models
         public ApplicationRole(string roleName) : base(roleName)
         {
         }
+
+        public ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }

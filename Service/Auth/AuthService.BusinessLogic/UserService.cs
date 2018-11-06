@@ -87,5 +87,10 @@ namespace AuthService.BusinessLogic
             };
             return user as TUser;
         }
+
+        public async Task<IList<string>> GetRolesAsync(TUser user)
+        {
+            return await _userManager.GetRolesAsync(user);
+        }
     }
 }

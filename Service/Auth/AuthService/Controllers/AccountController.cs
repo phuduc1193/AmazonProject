@@ -17,6 +17,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthService.Common.Interfaces.Services;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace AuthService.Controllers
 {
@@ -101,9 +103,15 @@ namespace AuthService.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
                         };
                     };
+                    var claims = new List<Claim>();
+                    var roles = await _userService.GetRolesAsync(user);
+                    foreach(var role in roles)
+                    {
+                        claims.Add(new Claim("role", role));
+                    }
 
                     // issue authentication cookie with subject ID and username
-                    await HttpContext.SignInAsync(user.Id, user.UserName, props);
+                    await HttpContext.SignInAsync(user.Id, user.UserName, props, claims.ToArray());
 
                     if (context != null)
                     {

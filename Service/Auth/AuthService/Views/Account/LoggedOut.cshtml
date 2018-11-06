@@ -6,16 +6,21 @@
 }
 
 <div class="page-header logged-out">
-    <h3>
+    <h3 class="border-bottom pb-2">
         Logout
         <small class="text-muted">You are now logged out</small>
     </h3>
-
     @if (Model.PostLogoutRedirectUri != null)
     {
         <div>
             Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
             <span>@Model.ClientName</span> application.
+        </div>
+    }
+    else
+    {
+        <div class="mt-5">
+            Click <a asp-controller="Home" asp-action="Index">here</a> to return to Identity Server homepage.
         </div>
     }
 

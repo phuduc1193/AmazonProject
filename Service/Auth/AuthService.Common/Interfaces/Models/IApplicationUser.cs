@@ -1,4 +1,7 @@
-﻿namespace AuthService.Common.Interfaces.Models
+﻿using AuthService.Common.Models;
+using System.Collections.Generic;
+
+namespace AuthService.Common.Interfaces.Models
 {
     public interface IApplicationUser
     {
@@ -8,5 +11,7 @@
         string FullName { get; }
         string LastName { get; set; }
         string MiddleName { get; set; }
+
+        ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }

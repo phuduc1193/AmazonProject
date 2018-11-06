@@ -1,5 +1,6 @@
 ﻿using AuthService.Common.Interfaces.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Text;
 
 namespace AuthService.Common.Models
@@ -24,5 +25,7 @@ namespace AuthService.Common.Models
         }
         public string ExternalProvider { get; set; }
         public string ExternalProviderId { get; set; }
+
+        public ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }

@@ -15,5 +15,6 @@ namespace AuthService.Common.Interfaces.Services
         Task<TUser> FindUserByExternalProviderAsync(string provider, string providerUserId);
         Task<bool> CreateAsync(TUser user, string password);
         Task<bool> ExternalCreateAsync(string provider, string providerUserId, IEnumerable<Claim> claims);
+        Task<IList<string>> GetRolesAsync(TUser user);
     }
 }
