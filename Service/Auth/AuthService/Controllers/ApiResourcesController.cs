@@ -29,6 +29,9 @@ namespace AuthService.Controllers
         public async Task<IActionResult> Index()
         {
             var vm = new ApiResourcesViewModel { ApiResources = await _service.GetListApiResourcesAsync() };
+            var errMsg = TempData["ErrorMessage"] as string;
+            if (!string.IsNullOrWhiteSpace(errMsg))
+                ModelState.AddModelError("", errMsg);
             return View(vm);
         }
 
@@ -42,7 +45,6 @@ namespace AuthService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromBody] ApiResource apiResource)
         {
-            apiResource = AddScopeIfEmpty(apiResource);
             var success = await _service.AddApiResourceAsync(apiResource);
             if (success)
                 return Success();
@@ -59,35 +61,28 @@ namespace AuthService.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPut]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromBody] ApiResource apiResource)
         {
-            apiResource = AddScopeIfEmpty(apiResource);
             var success = await _service.UpdateApiResourceAsync(apiResource);
             if (success)
                 return Success();
             return Error();
         }
 
-
-        private static ApiResource AddScopeIfEmpty(ApiResource apiResource)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (apiResource.Scopes == null || apiResource.Scopes.Count == 0
-                || string.IsNullOrWhiteSpace(apiResource.Scopes.First().Name))
-            {
-                apiResource.Scopes = new List<ApiScope> {
-                    new ApiScope {
-                        Name = apiResource.Name,
-                        DisplayName = apiResource.DisplayName,
-                        Description = apiResource.Description,
-                        Emphasize = true,
-                        Required = true
-                    }
-                };
-            }
-            return apiResource;
+            var success = await _service.RemoveApiResourceByIdAsync(id);
+            if (success)
+                return RedirectToAction("Index");
+
+            TempData["ErrorMessage"] = "Cannot delete API Resource. Please try again!";
+            return RedirectToAction("Index");
         }
+
         private IActionResult Success()
         {
             Response.StatusCode = (int)HttpStatusCode.OK;

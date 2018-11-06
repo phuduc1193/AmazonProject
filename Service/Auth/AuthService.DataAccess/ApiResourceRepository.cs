@@ -58,5 +58,15 @@ namespace AuthService.DataAccess
             var result = await _context.SaveChangesAsync();
             return result;
         }
+
+        public async Task<int> RemoveApiResourceByIdAsync(int id)
+        {
+            var apiResource = await GetApiResourceByIdAsync(id);
+            _context.ApiScopes.RemoveRange(apiResource.Scopes);
+            _context.ApiClaims.RemoveRange(apiResource.UserClaims);
+            _context.ApiSecrets.RemoveRange(apiResource.Secrets);
+            _context.ApiResources.Remove(apiResource);
+            return await _context.SaveChangesAsync();
+        }
     }
 }

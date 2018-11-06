@@ -1,5 +1,5 @@
 ﻿angular.module('authServiceApp', [])
-    .controller('EditApiResourceController', ['$http', function ($http) {
+    .controller('ApiResourceController', ['$http', function ($http) {
         const defaultScope = {
             Name: "",
             DisplayName: "",

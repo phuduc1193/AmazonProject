@@ -10,5 +10,6 @@ namespace AuthService.Common.Interfaces.Repositories
         Task<int> AddApiResourceAsync(ApiResource apiResource);
         Task<ApiResource> GetApiResourceByIdAsync(int id);
         Task<int> UpdateApiResourceAsync(ApiResource apiResource);
+        Task<int> RemoveApiResourceByIdAsync(int id);
     }
 }

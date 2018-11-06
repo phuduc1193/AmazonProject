@@ -29,7 +29,7 @@
                         <th scope="col">Description</th>
                         <th scope="col">Enabled</th>
                         <th scope="col">Scopes</th>
-                        <th></th>
+                        <th colspan="2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,10 +48,17 @@
                             </td>
                             <td></td>
                             <td class="align-middle text-center">
-                                <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@apiResource.Id"
-                                    data-toggle="tooltip" data-placement="top" title="Edit resource @apiResource.Name">
+                                <a asp-action="Edit" asp-route-id="@apiResource.Id"
+                                   data-toggle="tooltip" data-placement="top" title="Edit resource @apiResource.Name">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
+                            </td>
+                            <td class="align-middle text-center">
+                                <form asp-action="Delete" asp-route-id="@apiResource.Id">
+                                    <a class="text-danger" href="#" onclick="$(this).closest('form').submit();">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                </form>
                             </td>
                         </tr>
                     }
