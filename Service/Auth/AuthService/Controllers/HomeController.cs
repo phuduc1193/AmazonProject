@@ -23,13 +23,7 @@ namespace AuthService.Controllers
 
         public IActionResult Index()
         {
-            if (_environment.IsDevelopment())
-            {
-                // only show in development
-                return View();
-            }
-
-            return NotFound();
+            return View();
         }
 
         /// <summary>
@@ -39,7 +33,6 @@ namespace AuthService.Controllers
         {
             var vm = new ErrorViewModel();
 
-            // retrieve error details from identityserver
             var message = await _interaction.GetErrorContextAsync(errorId);
             if (message != null)
             {
@@ -47,7 +40,6 @@ namespace AuthService.Controllers
 
                 if (!_environment.IsDevelopment())
                 {
-                    // only show in development
                     message.ErrorDescription = null;
                 }
             }

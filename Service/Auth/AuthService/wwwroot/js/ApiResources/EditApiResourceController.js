@@ -16,6 +16,7 @@
             api.DisplayName = data.DisplayName;
             api.Description = data.Description;
             api.Enabled = data.Enabled;
+            api.Secrets = data.Secrets;
             api.Scopes = data.Scopes;
         }
 
@@ -49,4 +50,23 @@
                 });
             });
         };
+
+        api.generateSecret = function () {
+            api.Secrets = [];
+            const secretString = sha256(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
+            const secretData = {
+                Value: secretString,
+                Description: `Secret for ${api.Name}`
+            };
+            api.Secrets.push(secretData);
+        }
+
+        api.clipboardText = function (str) {
+            const el = document.createElement('textarea');
+            el.value = str;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
     }]);

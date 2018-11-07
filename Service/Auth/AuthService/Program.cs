@@ -3,7 +3,7 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.AspNetCore;
 using Serilog.Events;
-using AuthService.BusinessLogic.DbContexts;
+using AuthService.DbContexts;
 
 namespace AuthService
 {
@@ -13,6 +13,7 @@ namespace AuthService
         {
             var host = BuildWebHost(args);
             DbInitializer.Initialize(host.Services);
+            DbInitializer.CreateRoles(host.Services);
             host.Run();
         }
 

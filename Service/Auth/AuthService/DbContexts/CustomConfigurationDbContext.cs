@@ -4,7 +4,7 @@ using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthService.BusinessLogic.DbContexts
+namespace AuthService.DbContexts
 {
     public class CustomConfigurationDbContext : DbContext, IConfigurationDbContext, ICustomConfigurationDbContext
     {

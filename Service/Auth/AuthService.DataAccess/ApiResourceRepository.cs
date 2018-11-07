@@ -55,6 +55,13 @@ namespace AuthService.DataAccess
                 select scope
             );
             _context.ApiScopes.RemoveRange(scopesToDelete);
+            var secretsToDelete = (
+                from secret in _context.ApiSecrets
+                where secret.ApiResource == apiResource
+                    && !apiResource.Secrets.Contains(secret)
+                select secret
+            );
+            _context.ApiSecrets.RemoveRange(secretsToDelete);
             var result = await _context.SaveChangesAsync();
             return result;
         }

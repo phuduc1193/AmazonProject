@@ -9,91 +9,115 @@
         return Xsrf.GetAndStoreTokens(Context).RequestToken;
     }
 }
+<script src="~/lib/js-sha256/sha256.min.js"></script>
 
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 <input type="hidden" id="Data"
        name="RequestVerificationToken" value="@ViewData["Data"]">
 
-<div class="page-header">
-    <h3>Edit API Resource</h3>
-</div>
-<div class="card" ng-controller="EditApiResourceController as api">
-    <div class="card-header">
-        Information
+<div class="container-fluid" ng-controller="EditApiResourceController as api">
+    <div class="page-header">
+        <h3><small>Edit Resource</small> {{api.Name}}</h3>
     </div>
-    <div class="card-body">
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label>
-                    Resource ID
-                    <i class="fas fa-info-circle cursor-pointer hover-darken pl-1" title="Unique Identifier for the Resource" data-toggle="tooltip" data-placement="top"></i>
-                </label>
-                <input ng-model="api.Name" class="form-control text-primary" placeholder="ex: authentication.api">
-            </div>
-            <div class="form-group col-md-4">
-                <label>Display Name</label>
-                <input ng-model="api.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
-            </div>
-            <div class="col-md-2 d-md-block d-none form-group offset-2">
-                <span>Resource Status</span>
-                <label class="m-0 mx-3 switch">
-                    <input type="checkbox" ng-model="api.Enabled" ng-true-value="true" ng-false-value="false">
-                    <span class="slider"></span>
-                </label>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            Information
         </div>
-        <div class="form-group">
-            <label>Description</label>
-            <textarea ng-model="api.Description" class="form-control text-primary"></textarea>
-        </div>
-        <div class="card mb-3">
-            <div class="card-header align-content-center d-flex justify-content-between">
-                <b class="align-self-center">Api Scopes</b>
-                <button class="btn btn-info" ng-click="api.addScope()">Add scope</button>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Display Name</label>
+                    <input ng-model="api.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
+                </div>
+                <div class="form-group col-md-4 col-xl-4 offset-xl-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <label>API Secret</label>
+                            <a href="#" class="float-right" ng-click="api.generateSecret()">Generate secret</a>
+                        </div>
+                        <div class="col-12 px-3">
+                            <div class="align-items-center row">
+                                <div class="col-9 col-sm-10 col-md-9 col-xl-10 ellipsis" title="{{api.Secrets[0].Value}}">{{ api.Secrets[0].Value }}</div>
+                                <div class="col-3 col-sm-2 col-md-3 col-xl-2">
+                                    <a href="#" class="btn btn-outline-success float-right" ng-click="api.clipboardText(api.Secrets[0].Value)">
+                                        <i class="far fa-copy" title="Copy secret to clipboard"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xl-1 d-md-block d-none form-group offset-md-1 offset-xl-2">
+                    <span>Resource Status</span>
+                    <label class="m-0 mx-3 switch">
+                        <input type="checkbox" ng-model="api.Enabled" ng-true-value="true" ng-false-value="false">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-bordered table-sm">
-                    <thead class="text-black-50">
-                        <tr>
-                            <th>
-                                Name <small class="px-1"><i class="fas fa-info-circle" title="Unique across all API resources"></i></small>
-                            </th>
-                            <th>Display Name</th>
-                            <th>Description</th>
-                            <th>Required</th>
-                            <th>Emphasize</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="content">
-                        <tr ng-repeat="scope in api.Scopes track by $index">
-                            <td class="table-input">
-                                <input ng-model="scope.Name" type="text" class="form-control text-primary">
-                            </td>
-                            <td class="table-input">
-                                <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
-                            </td>
-                            <td class="table-input">
-                                <input ng-model="scope.Description" type="text" class="form-control text-primary">
-                            </td>
-                            <td class="table-input">
-                                <input ng-model="scope.Required" type="checkbox">
-                            </td>
-                            <td class="table-input">
-                                <input ng-model="scope.Emphasize" type="checkbox">
-                            </td>
-                            <td class="align-middle text-center">
-                                <a class="text-danger" href="#" ng-click="api.removeScope($index)"><i class="fas fa-minus-circle"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea ng-model="api.Description" class="form-control text-primary"></textarea>
             </div>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-success" ng-click="api.edit()">Change</button>
-            <a id="cancel" class="btn btn-light float-right" asp-controller="ApiResources" asp-action="Index">Cancel</a>
+            <div class="card mb-3">
+                <div class="card-header align-content-center d-flex justify-content-between">
+                    <b class="align-self-center">Api Scopes</b>
+                    <button class="btn btn-info" ng-click="api.addScope()">Add scope</button>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm">
+                        <thead class="text-black-50">
+                            <tr>
+                                <th>
+                                    Name <i class="fas fa-info-circle px-1" title="Unique across all API resources"></i>
+                                </th>
+                                <th>Display Name</th>
+                                <th>Description</th>
+                                <th>
+                                    Required <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
+                                </th>
+                                <th>
+                                    Emphasize <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="content">
+                            <tr ng-repeat="scope in api.Scopes track by $index">
+                                <td class="table-input">
+                                    <input ng-model="scope.Name" type="text" class="form-control text-primary">
+                                </td>
+                                <td class="table-input">
+                                    <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
+                                </td>
+                                <td class="table-input">
+                                    <input ng-model="scope.Description" type="text" class="form-control text-primary">
+                                </td>
+                                <td class="table-input">
+                                    <input ng-model="scope.Required" type="checkbox">
+                                </td>
+                                <td class="table-input">
+                                    <input ng-model="scope.Emphasize" type="checkbox">
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a class="text-danger" href="#" ng-click="api.removeScope($index)" ng-class="{ 'd-none': $index == 0 && api.Scopes.length == 1 }">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                    <a class="text-muted not-allowed" href="#" title="At least one scope is required"
+                                       ng-class="{ 'd-none': $index != 0 || api.Scopes.length != 1 }">
+                                        <i class="fas fa-minus-circle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success" ng-click="api.edit()">Change</button>
+                <a id="cancel" class="btn btn-light float-right" asp-controller="ApiResources" asp-action="Index">Cancel</a>
+            </div>
         </div>
     </div>
 </div>

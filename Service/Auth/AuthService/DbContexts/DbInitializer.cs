@@ -1,5 +1,4 @@
 ﻿using AuthService.Common;
-using AuthService.Common.Interfaces.Models;
 using AuthService.Common.Models;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace AuthService.BusinessLogic.DbContexts
+namespace AuthService.DbContexts
 {
     public class DbInitializer
     {
@@ -19,7 +18,13 @@ namespace AuthService.BusinessLogic.DbContexts
                 scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
                 scope.ServiceProvider.GetService<CustomConfigurationDbContext>().Database.Migrate();
                 scope.ServiceProvider.GetService<UserDbContext>().Database.Migrate();
+            }
+        }
 
+        public static void CreateRoles(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
                 CreateRolesAsync(scope).Wait();
             }
         }

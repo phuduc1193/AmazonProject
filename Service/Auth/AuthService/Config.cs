@@ -14,7 +14,7 @@ using AuthService.Common.Interfaces.Services;
 using AuthService.DataAccess;
 using AuthService.Common.Interfaces.Repositories;
 using AuthService.Common.Interfaces.Contexts;
-using AuthService.BusinessLogic.DbContexts;
+using AuthService.DbContexts;
 using AuthService.Common.Interfaces.Models;
 
 namespace AuthService

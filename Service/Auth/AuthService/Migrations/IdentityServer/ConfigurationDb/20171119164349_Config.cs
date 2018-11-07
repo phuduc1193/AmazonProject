@@ -148,7 +148,7 @@ namespace AuthService.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ApiResourceId = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
-                    Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Expiration = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     Type = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true)
                 },
@@ -342,7 +342,7 @@ namespace AuthService.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClientId = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
-                    Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Expiration = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     Type = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false)
                 },

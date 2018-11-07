@@ -106,6 +106,9 @@ td.table-input input[type="checkbox"] {
 .hover-lighten:hover {
     filter: brightness(120%) !important;
 }
+.not-allowed {
+    cursor: not-allowed;
+}
 .switch input {
     display: none;
 }
@@ -146,4 +149,9 @@ input:checked + .slider:before {
 }
 input:checked + .slider {
     box-shadow: 0 0 0 2px limeGreen,0 0 2px limeGreen;
+}
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

@@ -3,8 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using AuthService.Common.Models;
-using AuthService.BusinessLogic.DbContexts;
-using AuthService.DataAccess;
+using AuthService.DbContexts;
 
 namespace AuthService
 {

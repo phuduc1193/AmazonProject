@@ -71,8 +71,6 @@ namespace AuthService.Controllers
             {
                 if (await _clientStore.IsPkceClientAsync(result.ClientId))
                 {
-                    // if the client is PKCE then we assume it's native, so this change in how to
-                    // return the response is for better UX for the end user.
                     return View("Redirect", new RedirectViewModel { RedirectUrl = result.RedirectUri });
                 }
 
@@ -99,24 +97,19 @@ namespace AuthService.Controllers
         {
             var result = new ProcessConsentResult();
 
-            // validate return url is still valid
             var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
             if (request == null) return result;
 
             ConsentResponse grantedConsent = null;
 
-            // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
                 grantedConsent = ConsentResponse.Denied;
 
-                // emit event
                 await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), result.ClientId, request.ScopesRequested));
             }
-            // user clicked 'yes' - validate the data
             else if (model.Button == "yes" && model != null)
             {
-                // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
                     var scopes = model.ScopesConsented;
@@ -131,7 +124,6 @@ namespace AuthService.Controllers
                         ScopesConsented = scopes.ToArray()
                     };
 
-                    // emit event
                     await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested, grantedConsent.ScopesConsented, grantedConsent.RememberConsent));
                 }
                 else
@@ -146,16 +138,13 @@ namespace AuthService.Controllers
 
             if (grantedConsent != null)
             {
-                // communicate outcome of consent back to identityserver
                 await _interaction.GrantConsentAsync(request, grantedConsent);
 
-                // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
                 result.ClientId = request.ClientId;
             }
             else
             {
-                // we need to redisplay the consent UI
                 result.ViewModel = await BuildViewModelAsync(model.ReturnUrl, model);
             }
 
