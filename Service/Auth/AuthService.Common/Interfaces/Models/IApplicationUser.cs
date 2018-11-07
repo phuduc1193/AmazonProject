@@ -5,6 +5,8 @@ namespace AuthService.Common.Interfaces.Models
 {
     public interface IApplicationUser
     {
+        string UserName { get; set; }
+        string Email { get; set; }
         string ExternalProvider { get; set; }
         string ExternalProviderId { get; set; }
         string FirstName { get; set; }

@@ -1,0 +1,101 @@
+﻿@model ApiResourcesViewModel
+
+@{
+    ViewData["Title"] = "Claims";
+}
+
+@if (Model.ApiResources.Count == 0)
+{
+    <div class="container">
+        <div class="page-header">
+            <h3>API Resources</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="alert alert-light">
+                    There is no API Resources available.
+                </div>
+            </div>
+            <div class="col-12">
+                <a class="btn btn-success pull-right"
+                   asp-controller="ApiResources"
+                   asp-action="New">Add API Resource</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="page-header">
+            <h3>API Resources</h3>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <table id="dataTable" class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="align-middle text-center" scope="col">#</th>
+                            <th class="align-middle" scope="col">
+                                Unique ID
+                                <i class="fas fa-info-circle cursor-pointer hover-darken" title="Unique Identifier for the Resource"></i>
+                            </th>
+                            <th class="align-middle" scope="col">Name</th>
+                            <th class="align-middle w-50" scope="col">Description</th>
+                            <th class="align-middle" scope="col">Enabled</th>
+                            <th class="align-middle" scope="col">Scopes</th>
+                            <th class="align-middle" colspan="2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var apiResource in Model.ApiResources)
+                        {
+                            <tr>
+                                <th class="text-center" scope="row">@apiResource.Id</th>
+                                <td>@apiResource.Name</td>
+                                <td>@apiResource.DisplayName</td>
+                                <td>@apiResource.Description</td>
+                                <td class="align-middle text-center">
+                                    @if (apiResource.Enabled)
+                                    {
+                                        <i class="far fa-check-circle text-success"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @{ var last = apiResource.Scopes.Last(); }
+                                    @foreach (var scope in apiResource.Scopes)
+                                    {
+                                        @scope.Name
+                                        @if (!scope.Equals(last))
+                                        {
+                                            <br />
+                                        }
+                                    }
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a asp-action="Edit" asp-route-id="@apiResource.Id"
+                                       data-toggle="tooltip" data-placement="top" title="Edit resource">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <form asp-action="Delete" asp-route-id="@apiResource.Id">
+                                        <a class="text-danger" href="#" onclick="$(this).closest('form').submit();"
+                                           data-toggle="tooltip" data-placement="top" title="Remove resource">
+                                            <i class="fas fa-minus-circle"></i>
+                                        </a>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12">
+                <a class="btn btn-success pull-right"
+                   asp-controller="ApiResources"
+                   asp-action="New">Add API Resource</a>
+            </div>
+        </div>
+    </div>
+}

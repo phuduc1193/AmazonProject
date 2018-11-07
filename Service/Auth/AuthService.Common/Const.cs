@@ -1,4 +1,6 @@
-﻿namespace AuthService.Common
+﻿using AuthService.Common.Interfaces.Models;
+
+namespace AuthService.Common
 {
     public class Const
     {
@@ -8,7 +10,6 @@
         }
 
         public const string ConnectionString = "DefaultConnection";
-
         public const string MigrationAssembly = "MigrationAssembly";
 
         public class DefaultRoles

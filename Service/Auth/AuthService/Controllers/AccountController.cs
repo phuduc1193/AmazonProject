@@ -97,7 +97,6 @@ namespace AuthService.Controllers
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
                         };
                     };
-
                     var claims = new List<Claim>();
                     var roles = await _userService.GetRolesAsync(user);
                     foreach(var role in roles)
