@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace AuthService.Migrations
+namespace AuthService.DataAccess.Migrations
 {
     public partial class Grants : Migration
     {

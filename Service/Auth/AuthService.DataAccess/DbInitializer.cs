@@ -1,13 +1,12 @@
 ﻿using AuthService.Common;
 using AuthService.Common.Models;
-using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace AuthService.DbContexts
+namespace AuthService.DataAccess
 {
     public class DbInitializer
     {
@@ -15,9 +14,7 @@ namespace AuthService.DbContexts
         {
             using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                scope.ServiceProvider.GetService<PersistedGrantDbContext>().Database.Migrate();
-                scope.ServiceProvider.GetService<CustomConfigurationDbContext>().Database.Migrate();
-                scope.ServiceProvider.GetService<UserDbContext>().Database.Migrate();
+                scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
             }
         }
 

@@ -3,7 +3,7 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.AspNetCore;
 using Serilog.Events;
-using AuthService.DbContexts;
+using AuthService.DataAccess;
 
 namespace AuthService
 {

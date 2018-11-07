@@ -10,9 +10,9 @@ namespace AuthService.DataAccess
 {
     public class ApiResourceRepository : IApiResourceRepository
     {
-        private ICustomConfigurationDbContext _context;
+        private IApplicationDbContext _context;
 
-        public ApiResourceRepository(ICustomConfigurationDbContext context)
+        public ApiResourceRepository(IApplicationDbContext context)
         {
             _context = context;
         }

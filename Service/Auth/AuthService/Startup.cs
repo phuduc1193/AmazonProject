@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using AuthService.Common.Models;
-using AuthService.DbContexts;
+using AuthService.DataAccess;
 
 namespace AuthService
 {
@@ -21,8 +21,8 @@ namespace AuthService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContexts<UserDbContext>(Configuration);
-            services.AddAuthenticationServices<UserDbContext, ApplicationUser, ApplicationRole, ApplicationProfileService, CustomConfigurationDbContext>(Configuration, Environment);
+            services.AddDbContexts<ApplicationDbContext>(Configuration);
+            services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, ApplicationRole, ApplicationProfileService, ApplicationDbContext, ApplicationDbContext>(Configuration, Environment);
             services.AddDependencies<ApplicationUser>();
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }

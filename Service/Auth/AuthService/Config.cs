@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Reflection;
 using IdentityServer4.Services;
 using IdentityServer4.EntityFramework.Interfaces;
 using AuthService.Common;
@@ -14,7 +13,6 @@ using AuthService.Common.Interfaces.Services;
 using AuthService.DataAccess;
 using AuthService.Common.Interfaces.Repositories;
 using AuthService.Common.Interfaces.Contexts;
-using AuthService.DbContexts;
 using AuthService.Common.Interfaces.Models;
 
 namespace AuthService
@@ -25,18 +23,20 @@ namespace AuthService
             where TContext : DbContext
         {
             var connectionString = configuration.GetConnectionString(Const.ConnectionString);
-            services.AddDbContext<TContext>(options => options.UseSqlServer(connectionString));
+            var migrationAssembly = configuration.GetConnectionString(Const.MigrationAssembly);
+            services.AddDbContext<TContext>(options => options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly)));
         }
 
-        public static IServiceCollection AddAuthenticationServices<TContext, TUser, TRole, TProfileService, TConfigurationDbContext>(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        public static IServiceCollection AddAuthenticationServices<TContext, TUser, TRole, TProfileService, TConfigurationDbContext, TPersistedGrantDbContext>(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
             where TContext : DbContext
             where TUser : class, IApplicationUser
             where TRole : class, IApplicationRole
             where TProfileService : class, IProfileService
             where TConfigurationDbContext : DbContext, IConfigurationDbContext
+            where TPersistedGrantDbContext : DbContext, IPersistedGrantDbContext
         {
             var connectionString = configuration.GetConnectionString(Const.ConnectionString);
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var migrationAssembly = configuration.GetConnectionString(Const.MigrationAssembly);
 
             services.Configure<IISOptions>(options =>
             {
@@ -62,13 +62,13 @@ namespace AuthService
                 {
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
+                            sql => sql.MigrationsAssembly(migrationAssembly));
                 })
-                .AddOperationalStore(options =>
+                .AddOperationalStore<TPersistedGrantDbContext>(options =>
                 {
                     options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
+                            sql => sql.MigrationsAssembly(migrationAssembly));
 
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30;
@@ -89,7 +89,7 @@ namespace AuthService
         public static IServiceCollection AddDependencies<TUser>(this IServiceCollection services)
             where TUser : class, IApplicationUser
         {
-            services.AddTransient<ICustomConfigurationDbContext, CustomConfigurationDbContext>();
+            services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
 
             services.AddTransient<IApiResourceRepository, ApiResourceRepository>();
 

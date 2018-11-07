@@ -9,6 +9,8 @@
 
         public const string ConnectionString = "DefaultConnection";
 
+        public const string MigrationAssembly = "MigrationAssembly";
+
         public class DefaultRoles
         {
             public const string Admin = "Admin";
