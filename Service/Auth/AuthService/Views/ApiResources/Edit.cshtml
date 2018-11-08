@@ -9,14 +9,12 @@
         return Xsrf.GetAndStoreTokens(Context).RequestToken;
     }
 }
-<script src="~/lib/js-sha256/sha256.min.js"></script>
-
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 <input type="hidden" id="Data"
        name="RequestVerificationToken" value="@ViewData["Data"]">
 
-<div class="container-fluid" ng-controller="EditApiResourceController as api">
+<div class="container" ng-controller="EditApiResourceController as api">
     <div class="page-header">
         <h3><small>Edit Resource</small> {{api.Name}}</h3>
     </div>
@@ -48,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 col-xl-1 d-md-block d-none form-group offset-md-1 offset-xl-2">
+                <div class="col-md-2 d-md-block d-none form-group offset-md-1">
                     <span>Resource Status</span>
                     <label class="m-0 mx-3 switch">
                         <input type="checkbox" ng-model="api.Enabled" ng-true-value="true" ng-false-value="false">

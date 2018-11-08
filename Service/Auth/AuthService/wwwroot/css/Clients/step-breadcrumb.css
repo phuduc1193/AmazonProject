@@ -1,0 +1,86 @@
+﻿.breadcrumb {
+    padding: 0;
+    background: var(--light);
+    list-style: none;
+    overflow: hidden;
+}
+
+    .breadcrumb > li + li:before {
+        padding: 0;
+    }
+
+    .breadcrumb li {
+        float: left;
+    }
+
+        .breadcrumb li.active a {
+            color: white;
+            background: #128f76;
+        }
+
+        .breadcrumb li.completed a {
+            color: white;
+            background: var(--green);
+        }
+
+        .breadcrumb li.active a:after {
+            border-left: 30px solid #128f76;
+        }
+
+        .breadcrumb li.completed a:after {
+            border-left: 30px solid var(--green);
+        }
+
+        .breadcrumb li a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 14px 0 14px 45px;
+            position: relative;
+            display: block;
+            float: left;
+        }
+
+            .breadcrumb li a:after {
+                content: " ";
+                display: block;
+                width: 0;
+                height: 0;
+                border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+                border-bottom: 50px solid transparent;
+                border-left: 30px solid var(--light);
+                position: absolute;
+                top: 50%;
+                margin-top: -50px;
+                left: 100%;
+                z-index: 2;
+            }
+
+            .breadcrumb li a:before {
+                content: " ";
+                display: block;
+                width: 0;
+                height: 0;
+                border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+                border-bottom: 50px solid transparent;
+                border-left: 30px solid white;
+                position: absolute;
+                top: 50%;
+                margin-top: -50px;
+                margin-left: 1px;
+                left: 100%;
+                z-index: 1;
+            }
+
+        .breadcrumb li:first-child a {
+            padding-left: 15px;
+        }
+
+        .breadcrumb li a:hover {
+            color: white;
+            background: #0d7661;
+        }
+
+            .breadcrumb li a:hover:after {
+                color: white;
+                border-left-color: #0d7661 !important;
+            }

@@ -27,5 +27,11 @@ namespace AuthService.Controllers
                 ModelState.AddModelError("", errMsg);
             return View(vm);
         }
+
+        [HttpGet]
+        public IActionResult New()
+        {
+            return View();
+        }
     }
 }

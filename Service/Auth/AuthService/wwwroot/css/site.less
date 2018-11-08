@@ -174,7 +174,7 @@ td.table-input {
     left: 0;
     right: 0;
     border-radius: 30px;
-    box-shadow: 0 0 0 2px #777, 0 0 4px #777;
+    box-shadow: 0 0 0 2px var(--secondary), 0 0 4px var(--secondary);
     cursor: pointer;
     border: 4px solid transparent;
     overflow: hidden;
@@ -185,7 +185,7 @@ td.table-input {
         content: "";
         width: 100%;
         height: 100%;
-        background: #777;
+        background: var(--secondary);
         border-radius: 30px;
         transform: translateX(-30px);
         transition: .4s;
@@ -193,11 +193,11 @@ td.table-input {
 }
 
 input:checked + .slider {
-    box-shadow: 0 0 0 2px limeGreen,0 0 2px limeGreen;
+    box-shadow: 0 0 0 2px var(--success),0 0 2px var(--success);
 
     &:before {
         transform: translateX(30px);
-        background: limeGreen;
+        background: var(--success);
     }
 }
 
@@ -205,4 +205,17 @@ input:checked + .slider {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.glow {
+    display: inline-block;
+    transition-duration: 0.3s;
+    transition-property: box-shadow;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+
+    &:hover {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    }
 }

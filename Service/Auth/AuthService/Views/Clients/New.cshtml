@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "New Client";
+}
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Clients/step-breadcrumb.css" />
+}
+
+<input type="hidden" id="RequestVerificationToken"
+       name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+
+<div class="container-fluid" ng-controller="NewClientController">
+    <div class="row d-none d-md-block">
+        <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
+            <ul class="breadcrumb nav">
+                <li class="text-center w-25" ng-class="getBreadcrumFieldClass(0)">
+                    <a ng-click="activeTab(0)" class="w-100" data-toggle="tab" href="#type">
+                        <i class="fas fa-cog pr-2"></i> Client Type
+                    </a>
+                </li>
+                <li class="text-center w-25" ng-class="getBreadcrumFieldClass(1)">
+                    <a ng-click="activeTab(1)" class="w-100" data-toggle="tab" href="#info">
+                        <i class="fas fa-user-edit pr-2"></i> Information
+                    </a>
+                </li>
+                <li class="text-center w-25" ng-class="getBreadcrumFieldClass(2)">
+                    <a ng-click="activeTab(2)" class="w-100" data-toggle="tab" href="#scope">
+                        <i class="fas fa-shield-alt pr-2"></i> Allowed Scopes
+                    </a>
+                </li>
+                <li class="text-center w-25" ng-class="getBreadcrumFieldClass(3)">
+                    <a ng-click="activeTab(3)" class="w-100" data-toggle="tab" href="#review">
+                        <i class="fas fa-check-double pr-2"></i> Overview
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
+            <div class="tab-content">
+                <div class="tab-pane fade show active card" id="type">
+                    <div class="card-body text-center text-secondary py-5">
+                        <h3 class="text-black-50">
+                            <small>
+                                <b>Setup a Client Application</b>
+                            </small>
+                        </h3>
+                        <h4 class="mb-3"><i>Select the type of application you want to create</i></h4>
+                        <div class="row text-black-50">
+                            <div class="col-4 cursor-pointer glow py-4 rounded">
+                                <h4>
+                                    <i class="pb-4 fas fa-globe fa-2x"></i><br/>
+                                    <i>Singple Page Application</i>
+                                </h4>
+                                <div class="text-muted">
+                                    A client-side application running in a browser. These applications cannot be trusted to keep secrets or use refresh tokens. Tokens will be sent through via the browser and will be visible to the user.
+                                </div>
+                            </div>
+                            <div class="col-4 cursor-pointer glow py-4 rounded">
+                                <h4>
+                                    <i class="pb-4 fab fa-chrome fa-2x"></i><br />
+                                    <i>Web Application</i>
+                                </h4>
+                                <div class="text-muted">
+                                    Server-side application that can be trusted to keep a secret and use refresh tokens. Tokens will be sent to a back-end server and will not be visible to the user.
+                                </div>
+                            </div>
+                            <div class="col-4 cursor-pointer glow py-4 rounded">
+                                <h4>
+                                    <i class="pb-4 fab fa-android fa-2x"></i><br />
+                                    <i>Robot</i>
+                                </h4>
+                                <div class="text-muted">
+                                    Machine-to-machine communication. No humans allowed!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade card" id="info">
+                    <div class="card-body">
+                        Type
+                    </div>
+                </div>
+                <div class="tab-pane fade card" id="scope">
+                    <div class="card-body">
+                        Type
+                    </div>
+                </div>
+                <div class="tab-pane fade card" id="review">
+                    <div class="card-body">
+                        Type
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Clients/NewClientController.js"></script>

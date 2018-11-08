@@ -9,13 +9,10 @@
         return Xsrf.GetAndStoreTokens(Context).RequestToken;
     }
 }
-
-<script src="~/lib/js-sha256/sha256.min.js"></script>
-
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 
-<div class="container-fluid">
+<div class="container">
     <div class="page-header">
         <h3><small>New API Resource</small></h3>
     </div>
