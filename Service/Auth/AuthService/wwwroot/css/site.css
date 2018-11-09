@@ -97,8 +97,11 @@ td.table-input input[type="checkbox"] {
     margin: 10px 50% !important;
     transform: translate(-50%, 0) !important;
 }
-.cursor-pointer {
+.cursor-pointer * {
    cursor: pointer !important;
+}
+.cursor-default * {
+    cursor: default !important;
 }
 .hover-darken:hover {
     filter: brightness(80%) !important;
@@ -106,7 +109,7 @@ td.table-input input[type="checkbox"] {
 .hover-lighten:hover {
     filter: brightness(120%) !important;
 }
-.not-allowed {
+.not-allowed * {
     cursor: not-allowed;
 }
 .switch input {
@@ -165,4 +168,25 @@ input:checked + .slider {
 }
 .glow:hover {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+.glow-on {
+    display: inline-block;
+    transition-duration: 0.3s;
+    transition-property: box-shadow;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    transform: translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+.h-md-100 {
+    height: auto !important;
+}
+@media (min-width: 768px) {
+    .h-md-100 {
+        height: 100% !important;
+    }
+}
+.form-group.required .control-label:after {
+    content: "*";
+    color: red;
 }

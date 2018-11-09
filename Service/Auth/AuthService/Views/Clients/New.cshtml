@@ -18,27 +18,27 @@
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 
 <div class="container-fluid" ng-controller="NewClientController">
-    <div class="row d-none d-md-block">
+    <div class="row">
         <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
             <ul class="breadcrumb nav">
                 <li class="text-center w-25" ng-class="getBreadcrumFieldClass(0)">
-                    <a ng-click="activeTab(0)" class="w-100" data-toggle="tab" href="#type">
-                        <i class="fas fa-cog pr-2"></i> Client Type
+                    <a ng-click="activeTab($event, 0)" class="w-100" data-toggle="tab" href="#type" id="type-tab" title="Client Type">
+                        <i class="fas fa-cog mb-1"></i> <span class="d-none d-md-block">Client Type</span>
                     </a>
                 </li>
                 <li class="text-center w-25" ng-class="getBreadcrumFieldClass(1)">
-                    <a ng-click="activeTab(1)" class="w-100" data-toggle="tab" href="#info">
-                        <i class="fas fa-user-edit pr-2"></i> Information
+                    <a ng-click="activeTab($event, 1)" class="w-100" data-toggle="tab" href="#info" id="info-tab" title="Information">
+                        <i class="fas fa-user-edit mb-1"></i> <span class="d-none d-md-block">Information</span>
                     </a>
                 </li>
                 <li class="text-center w-25" ng-class="getBreadcrumFieldClass(2)">
-                    <a ng-click="activeTab(2)" class="w-100" data-toggle="tab" href="#scope">
-                        <i class="fas fa-shield-alt pr-2"></i> Allowed Scopes
+                    <a ng-click="activeTab($event, 2)" class="w-100" data-toggle="tab" href="#scope" id="scope-tab" title="Allowed Scopes">
+                        <i class="fas fa-shield-alt mb-1"></i> <span class="d-none d-md-block">Allowed Scopes</span>
                     </a>
                 </li>
                 <li class="text-center w-25" ng-class="getBreadcrumFieldClass(3)">
-                    <a ng-click="activeTab(3)" class="w-100" data-toggle="tab" href="#review">
-                        <i class="fas fa-check-double pr-2"></i> Overview
+                    <a ng-click="activeTab($event, 3)" class="w-100" data-toggle="tab" href="#review" id="review-tab" title="Overview">
+                        <i class="fas fa-check-double mb-1"></i> <span class="d-none d-md-block">Overview</span>
                     </a>
                 </li>
             </ul>
@@ -48,57 +48,156 @@
         <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
             <div class="tab-content">
                 <div class="tab-pane fade show active card" id="type">
-                    <div class="card-body text-center text-secondary py-5">
+                    <div class="card-body text-center text-secondary px-5">
                         <h3 class="text-black-50">
                             <small>
                                 <b>Setup a Client Application</b>
                             </small>
                         </h3>
-                        <h4 class="mb-3"><i>Select the type of application you want to create</i></h4>
+                        <h4 class="mb-5"><i>Select the type of application you want to create</i></h4>
                         <div class="row text-black-50">
-                            <div class="col-4 cursor-pointer glow py-4 rounded">
-                                <h4>
-                                    <i class="pb-4 fas fa-globe fa-2x"></i><br/>
-                                    <i>Singple Page Application</i>
-                                </h4>
-                                <div class="text-muted">
-                                    A client-side application running in a browser. These applications cannot be trusted to keep secrets or use refresh tokens. Tokens will be sent through via the browser and will be visible to the user.
+                            <div class="card-deck">
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Implicit')" ng-class="{'glow-on': client.AllowedGrantTypes == 'Implicit'}">
+                                    <i class="card-img-top fas fa-globe fa-3x pt-4"></i>
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i>Singple Page Application</i></h4>
+                                        <p class="card-text">
+                                            A client-side application running in a browser. These applications cannot be trusted to keep secrets or use refresh tokens. Tokens will be sent through via the browser and will be visible to the user.
+                                        </p>
+                                        <p class="card-text"><small class="text-muted">Grant type: Implicit</small></p>
+                                    </div>
+                                </div>
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Hybrid')" ng-class="{'glow-on': client.AllowedGrantTypes == 'Hybrid'}">
+                                    <i class="card-img-top fab fa-chrome fa-3x pt-4"></i>
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i>Web Application</i></h4>
+                                        <p class="card-text">
+                                            Server-side application that can be trusted to keep a secret and use refresh tokens. Tokens will be sent to a back-end server and will not be visible to the user.
+                                        </p>
+                                        <p class="card-text"><small class="text-muted">Grant type: Hybrid</small></p>
+                                    </div>
+                                </div>
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('ClientCredentials')" ng-class="{'glow-on': client.AllowedGrantTypes == 'ClientCredentials'}">
+                                    <i class="card-img-top fas fa-globe fa-3x pt-4"></i>
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i>Robot</i></h4>
+                                        <p class="card-text">
+                                            Machine-to-machine communication. No humans allowed!
+                                        </p>
+                                        <p class="card-text"><small class="text-muted">Grant type: Client Credentials</small></p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-4 cursor-pointer glow py-4 rounded">
-                                <h4>
-                                    <i class="pb-4 fab fa-chrome fa-2x"></i><br />
-                                    <i>Web Application</i>
-                                </h4>
-                                <div class="text-muted">
-                                    Server-side application that can be trusted to keep a secret and use refresh tokens. Tokens will be sent to a back-end server and will not be visible to the user.
-                                </div>
-                            </div>
-                            <div class="col-4 cursor-pointer glow py-4 rounded">
-                                <h4>
-                                    <i class="pb-4 fab fa-android fa-2x"></i><br />
-                                    <i>Robot</i>
-                                </h4>
-                                <div class="text-muted">
-                                    Machine-to-machine communication. No humans allowed!
-                                </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col px-0 nav justify-content-between">
+                                <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                                <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceInfo($event)">Next</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade card" id="info">
                     <div class="card-body">
-                        Type
+                        <h3 class="text-black-50 text-center">
+                            <small>
+                                <b>Setup a {{ client.AllowedGrantTypes == 'Implicit' ? 'Single Page' : client.AllowedGrantTypes == 'Hybrid' ? 'Web' : 'Robot' }} Application</b>
+                            </small>
+                        </h3>
+                        <h4 class="mb-4 text-center text-secondary"><i>Enter client details</i></h4>
+                        <div class="form-row">
+                            <div class="form-group col-5 col-md-3 required">
+                                <label class="control-label">
+                                    Client ID
+                                </label>
+                                <i class="fas fa-info-circle cursor-pointer hover-darken pl-1" title="Unique Identifier for the Resource"></i>
+                                <input ng-model="client.Name" class="form-control text-primary" placeholder="ex: spa.client" autofocus>
+                            </div>
+                            <div class="form-group col-7 col-md-4 required">
+                                <label class="control-label">Display Name</label>
+                                <input ng-model="client.DisplayName" class="form-control text-primary" placeholder="ex: Single Page Application">
+                            </div>
+                            <div class="form-group col-md-5 mb-0" ng-if="client.AllowedGrantTypes != 'Implicit'">
+                                <div class="form-group row required">
+                                    <div class="col-12">
+                                        <label class="control-label">Client Secret</label>
+                                        <a href="#" class="float-right" ng-click="generateSecret($event)">Generate secret</a>
+                                    </div>
+                                    <div class="col-12 px-3">
+                                        <div class="align-items-center row">
+                                            <div class="col-auto pr-0">
+                                                <a href="#" class="btn btn-outline-success" ng-click="clipboardText(client.Secrets[0].Value)">
+                                                    <i class="far fa-copy" title="Copy secret to clipboard"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col ellipsis" title="{{client.Secrets[0].Value}}">{{ client.Secrets[0].Value }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-5" ng-if="client.AllowedGrantTypes == 'Implicit'">
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label class="control-label">Allowed Cors Origin</label>
+                                        <input ng-model="client.AllowedCorsOrigins" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row" ng-if="client.AllowedGrantTypes != 'ClientCredentials'">
+                            <div class="form-group col-5 col-md-3">
+                                <label class="control-label">Display URL</label>
+                                <input ng-model="client.ClientUri" class="form-control text-primary" placeholder="ex: https://www.example.com">
+                            </div>
+                            <div class="form-group col-7 col-md-4">
+                                <label class="control-label">Logo URL</label>
+                                <input ng-model="client.LogoUri" class="form-control text-primary" placeholder="ex: https://www.example.com">
+                            </div>
+                            <div class="form-group col-md-5 required">
+                                <label class="control-label">Callback URL</label>
+                                <input ng-model="client.RedirectUris" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com/callback">
+                            </div>
+                        </div>
+                        <div class="form-row" ng-if="client.AllowedGrantTypes != 'ClientCredentials'">
+                            <div class="form-group col-md-7 required">
+                                <label class="control-label">
+                                    Description
+                                </label>
+                                <textarea ng-model="client.Description" class="form-control text-primary h-md-100"></textarea>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label class="control-label">Logout URL</label>
+                                        <input ng-model="client.PostLogoutRedirectUris" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com">
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="client.AllowedGrantTypes == 'Hybrid'">
+                                    <div class="col form-group">
+                                        <label class="control-label">Client-side Logout URL</label>
+                                        <input ng-model="client.FrontChannelLogoutUri" class="form-control text-primary" placeholder="ex: https://www.example.com/signout">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group required" ng-if="client.AllowedGrantTypes == 'ClientCredentials'">
+                            <label class="control-label">Description</label>
+                            <textarea ng-model="client.Description" class="form-control text-primary"></textarea>
+                        </div>
+                        <div class="pt-5 nav justify-content-between">
+                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                            <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceScope($event)">Next</a>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade card" id="scope">
                     <div class="card-body">
-                        Type
+                        Scope
                     </div>
                 </div>
                 <div class="tab-pane fade card" id="review">
                     <div class="card-body">
-                        Type
+                        Review
                     </div>
                 </div>
             </div>

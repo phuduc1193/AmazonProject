@@ -36,8 +36,8 @@
                         </div>
                         <div class="col-12 px-3">
                             <div class="align-items-center row">
-                                <div class="col-9 col-sm-10 col-md-9 col-xl-10 ellipsis" title="{{api.Secrets[0].Value}}">{{ api.Secrets[0].Value }}</div>
-                                <div class="col-3 col-sm-2 col-md-3 col-xl-2">
+                                <div class="col ellipsis" title="{{api.Secrets[0].Value}}">{{ api.Secrets[0].Value }}</div>
+                                <div class="col-auto pl-0">
                                     <a href="#" class="btn btn-outline-success float-right" ng-click="api.clipboardText(api.Secrets[0].Value)">
                                         <i class="far fa-copy" title="Copy secret to clipboard"></i>
                                     </a>

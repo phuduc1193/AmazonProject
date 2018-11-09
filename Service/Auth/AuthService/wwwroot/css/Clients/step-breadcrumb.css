@@ -84,3 +84,13 @@
                 color: white;
                 border-left-color: #0d7661 !important;
             }
+
+        .breadcrumb li.muted a:hover {
+            color: white;
+            background: var(--gray) !important;
+        }
+
+            .breadcrumb li.muted a:hover:after {
+                color: white;
+                border-left-color: var(--gray) !important;
+            }
