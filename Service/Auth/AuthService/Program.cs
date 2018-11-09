@@ -14,6 +14,7 @@ namespace AuthService
             var host = BuildWebHost(args);
             DbInitializer.Initialize(host.Services);
             DbInitializer.CreateRoles(host.Services);
+            DbInitializer.AddDefaultIdentityResources(host.Services);
             host.Run();
         }
 

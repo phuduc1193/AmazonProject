@@ -7,8 +7,6 @@ namespace AuthService.Common.Interfaces.Models
     {
         string UserName { get; set; }
         string Email { get; set; }
-        string ExternalProvider { get; set; }
-        string ExternalProviderId { get; set; }
         string FirstName { get; set; }
         string FullName { get; }
         string LastName { get; set; }

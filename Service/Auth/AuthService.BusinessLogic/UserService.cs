@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AuthService.Common.Interfaces.Services;
 using AuthService.Common;
 using AuthService.Common.Interfaces.Models;
+using System;
 
 namespace AuthService.BusinessLogic
 {
@@ -57,16 +58,27 @@ namespace AuthService.BusinessLogic
         public async Task<bool> ExternalCreateAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
         {
             TUser user;
+            UserLoginInfo loginInfo;
             switch (provider)
             {
-                case Const.ExternalProvider.Google:
+                case Const.ExternalProvider.Google.Name:
                     user = CreateUserWithGoogleClaims(claims);
+                    loginInfo = CreateLoginInfoWithGoogle(providerUserId);
                     break;
                 default:
                     return false;
             }
             var result = await _userManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                result = await _userManager.AddLoginAsync(user, loginInfo);
+            }
             return result.Succeeded;
+        }
+
+        private UserLoginInfo CreateLoginInfoWithGoogle(string providerUserId)
+        {
+            return new UserLoginInfo(Const.ExternalProvider.Google.Name, providerUserId, Const.ExternalProvider.Google.DisplayName);
         }
 
         private TUser CreateUserWithGoogleClaims(IEnumerable<Claim> claims)
@@ -77,8 +89,6 @@ namespace AuthService.BusinessLogic
                 middleName = string.Join(" ", splitNameParts.GetRange(1, splitNameParts.Count - 2));
             var user = new ApplicationUser
             {
-                ExternalProvider = Const.ExternalProvider.Google,
-                ExternalProviderId = claims.FirstOrDefault(x => x.Type == "sub")?.Value,
                 Email = claims.FirstOrDefault(x => x.Type == "email")?.Value,
                 UserName = claims.FirstOrDefault(x => x.Type == "email")?.Value,
                 FirstName = splitNameParts?[0],

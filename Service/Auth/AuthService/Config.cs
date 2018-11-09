@@ -93,16 +93,17 @@ namespace AuthService
             where TUser : class, IApplicationUser
         {
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
-            services.AddTransient<IProfileService, ApplicationProfileService>();
+            services.AddScoped<IProfileService, ApplicationProfileService>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory<ApplicationUser, ApplicationRole>>();
 
-            services.AddTransient<IApiResourceRepository, ApiResourceRepository>();
-            services.AddTransient<IClientRepository, ClientRepository>();
+            services.AddScoped<IApiResourceRepository, ApiResourceRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IClaimRepository, ClaimRepository>();
 
-            services.AddTransient<IUserService<TUser>, UserService<TUser>>();
-            services.AddTransient<IApiResourceService, ApiResourceService>();
-            services.AddTransient<IClientService, ClientService>();
-            services.AddTransient<IClaimService, ClaimService>();
+            services.AddScoped<IUserService<TUser>, UserService<TUser>>();
+            services.AddScoped<IApiResourceService, ApiResourceService>();
+            services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IClaimService, ClaimService>();
 
             return services;
         }

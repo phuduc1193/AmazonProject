@@ -1,9 +1,11 @@
 ﻿using AuthService.Common;
 using AuthService.Common.Models;
+using IdentityServer4.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AuthService.DataAccess
@@ -16,6 +18,47 @@ namespace AuthService.DataAccess
             {
                 scope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
             }
+        }
+
+        public static void AddDefaultIdentityResources(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var resources = new List<IdentityServer4.EntityFramework.Entities.IdentityResource>
+                {
+                    ConvertIdentityResource(new IdentityResources.OpenId()),
+                    ConvertIdentityResource(new IdentityResources.Email()),
+                    ConvertIdentityResource(new IdentityResources.Profile()),
+                    ConvertIdentityResource(new IdentityResources.Phone()),
+                    ConvertIdentityResource(new IdentityResources.Address())
+                };
+                context.IdentityResources.AddRange(resources);
+                context.SaveChanges();
+            }
+        }
+
+        private static IdentityServer4.EntityFramework.Entities.IdentityResource ConvertIdentityResource(IdentityResource model)
+        {
+            var result = new IdentityServer4.EntityFramework.Entities.IdentityResource
+            {
+                Name = model.Name,
+                DisplayName = model.DisplayName,
+                Description = model.Description,
+                Emphasize = model.Emphasize,
+                Enabled = model.Enabled,
+                Required = model.Required,
+                ShowInDiscoveryDocument = model.ShowInDiscoveryDocument,
+                UserClaims = new List<IdentityServer4.EntityFramework.Entities.IdentityClaim>()
+            };
+
+            var userClaims = new List<IdentityServer4.EntityFramework.Entities.IdentityClaim>();
+            foreach(var claim in model.UserClaims)
+            {
+                userClaims.Add(new IdentityServer4.EntityFramework.Entities.IdentityClaim { Type = claim });
+            }
+            result.UserClaims.AddRange(userClaims);
+            return result;
         }
 
         public static void CreateRoles(IServiceProvider serviceProvider)

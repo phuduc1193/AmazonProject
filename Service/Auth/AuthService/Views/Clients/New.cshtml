@@ -192,7 +192,36 @@
                 </div>
                 <div class="tab-pane fade card" id="scope">
                     <div class="card-body">
-                        Scope
+                        <h3 class="text-black-50 text-center">
+                            <small>
+                                <b>Setup Client's Access Scopes</b>
+                            </small>
+                        </h3>
+                        <div class="row">
+                            <div class="col-12">
+                                <h5>Identity Resources</h5>
+                            </div>
+                            <div class="col-3" ng-repeat="scope in resources.identityScopes track by $index">
+                                <div class="checkbox cursor-pointer">
+                                    <input id="id-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope(scope)" class="pr-2">
+                                    <label for="id-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="col-12">
+                                <h5>API Resources</h5>
+                            </div>
+                            <div class="col-3" ng-repeat="scope in resources.apiScopes track by $index">
+                                <div class="checkbox cursor-pointer">
+                                    <input id="api-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope(scope)" class="pr-2">
+                                    <label for="api-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-5 nav justify-content-between">
+                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                            <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceFinal($event)">Next</a>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade card" id="review">

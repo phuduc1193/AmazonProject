@@ -6,7 +6,11 @@ namespace AuthService.Common
     {
         public class ExternalProvider
         {
-            public const string Google = "google";
+            public class Google
+            {
+                public const string Name = "google";
+                public const string DisplayName = "Google";
+            }
         }
 
         public const string ConnectionString = "DefaultConnection";

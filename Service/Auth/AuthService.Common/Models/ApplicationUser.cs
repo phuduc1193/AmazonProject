@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AuthService.Common.Models
 {
-    public class ApplicationUser : IdentityUser, IApplicationUser
+    public class ApplicationUser: IdentityUser, IApplicationUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -23,9 +23,6 @@ namespace AuthService.Common.Models
                 return sb.ToString().Trim();
             }
         }
-        public string ExternalProvider { get; set; }
-        public string ExternalProviderId { get; set; }
-
         public ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }
