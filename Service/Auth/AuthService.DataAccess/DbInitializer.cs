@@ -25,6 +25,9 @@ namespace AuthService.DataAccess
             using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var count = context.IdentityResources.CountAsync().Result;
+                if (count > 0)
+                    return;
                 var resources = new List<IdentityServer4.EntityFramework.Entities.IdentityResource>
                 {
                     ConvertIdentityResource(new IdentityResources.OpenId()),

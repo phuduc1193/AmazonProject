@@ -16,6 +16,12 @@ namespace AuthService.BusinessLogic
             _repo = repo;
         }
 
+        public async Task<bool> AddClientAsync(Client client)
+        {
+            var results = await _repo.AddClientAsync(client);
+            return results > 0;
+        }
+
         public async Task<List<Client>> GetListClientsAsync()
         {
             var results = await _repo.GetListClientsAsync();

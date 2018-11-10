@@ -57,7 +57,7 @@
                         <h4 class="mb-5"><i>Select the type of application you want to create</i></h4>
                         <div class="row text-black-50">
                             <div class="card-deck">
-                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Implicit')" ng-class="{'glow-on': client.AllowedGrantTypes == 'Implicit'}">
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Implicit')" ng-class="{'glow-on': grantType == 'Implicit'}">
                                     <i class="card-img-top fas fa-globe fa-3x pt-4"></i>
                                     <div class="card-body">
                                         <h4 class="card-title"><i>Singple Page Application</i></h4>
@@ -67,7 +67,7 @@
                                         <p class="card-text"><small class="text-muted">Grant type: Implicit</small></p>
                                     </div>
                                 </div>
-                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Hybrid')" ng-class="{'glow-on': client.AllowedGrantTypes == 'Hybrid'}">
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('Hybrid')" ng-class="{'glow-on': grantType == 'Hybrid'}">
                                     <i class="card-img-top fab fa-chrome fa-3x pt-4"></i>
                                     <div class="card-body">
                                         <h4 class="card-title"><i>Web Application</i></h4>
@@ -77,7 +77,7 @@
                                         <p class="card-text"><small class="text-muted">Grant type: Hybrid</small></p>
                                     </div>
                                 </div>
-                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('ClientCredentials')" ng-class="{'glow-on': client.AllowedGrantTypes == 'ClientCredentials'}">
+                                <div class="card cursor-pointer rounded" ng-click="setAllowedGrantTypes('ClientCredentials')" ng-class="{'glow-on': grantType == 'ClientCredentials'}">
                                     <i class="card-img-top fas fa-globe fa-3x pt-4"></i>
                                     <div class="card-body">
                                         <h4 class="card-title"><i>Robot</i></h4>
@@ -101,7 +101,7 @@
                     <div class="card-body">
                         <h3 class="text-black-50 text-center">
                             <small>
-                                <b>Setup a {{ client.AllowedGrantTypes == 'Implicit' ? 'Single Page' : client.AllowedGrantTypes == 'Hybrid' ? 'Web' : 'Robot' }} Application</b>
+                                <b>Setup a {{ grantType == 'Implicit' ? 'Single Page' : grantType == 'Hybrid' ? 'Web' : 'Robot' }} Application</b>
                             </small>
                         </h3>
                         <h4 class="mb-4 text-center text-secondary"><i>Enter client details</i></h4>
@@ -111,40 +111,40 @@
                                     Client ID
                                 </label>
                                 <i class="fas fa-info-circle cursor-pointer hover-darken pl-1" title="Unique Identifier for the Resource"></i>
-                                <input ng-model="client.Name" class="form-control text-primary" placeholder="ex: spa.client" autofocus>
+                                <input ng-model="client.ClientId" class="form-control text-primary" placeholder="ex: spa.client" autofocus>
                             </div>
                             <div class="form-group col-7 col-md-4 required">
-                                <label class="control-label">Display Name</label>
-                                <input ng-model="client.DisplayName" class="form-control text-primary" placeholder="ex: Single Page Application">
+                                <label class="control-label">Client Name</label>
+                                <input ng-model="client.ClientName" class="form-control text-primary" placeholder="ex: Single Page Application">
                             </div>
-                            <div class="form-group col-md-5 mb-0" ng-if="client.AllowedGrantTypes != 'Implicit'">
+                            <div class="form-group col-md-5 mb-0" ng-if="grantType != 'Implicit'">
                                 <div class="form-group row required">
                                     <div class="col-12">
                                         <label class="control-label">Client Secret</label>
-                                        <a href="#" class="float-right" ng-click="generateSecret($event)">Generate secret</a>
+                                        <a href="#" class="float-right px-1" ng-click="generateSecret($event)">Generate secret</a>
                                     </div>
                                     <div class="col-12 px-3">
                                         <div class="align-items-center row">
                                             <div class="col-auto pr-0">
-                                                <a href="#" class="btn btn-outline-success" ng-click="clipboardText(client.Secrets[0].Value)">
+                                                <a href="#" class="btn btn-outline-success" ng-click="clipboardText(client.ClientSecrets[0].Value)">
                                                     <i class="far fa-copy" title="Copy secret to clipboard"></i>
                                                 </a>
                                             </div>
-                                            <div class="col ellipsis" title="{{client.Secrets[0].Value}}">{{ client.Secrets[0].Value }}</div>
+                                            <div class="col ellipsis" title="{{client.ClientSecrets[0].Value}}">{{ client.ClientSecrets[0].Value }}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-5" ng-if="client.AllowedGrantTypes == 'Implicit'">
+                            <div class="form-group col-md-5" ng-if="grantType == 'Implicit'">
                                 <div class="row">
                                     <div class="col form-group">
                                         <label class="control-label">Allowed Cors Origin</label>
-                                        <input ng-model="client.AllowedCorsOrigins" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com">
+                                        <input ng-model="client.AllowedCorsOrigins[0].AllowedCorsOrigin" class="form-control text-primary" placeholder="ex: https://www.example.com">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row" ng-if="client.AllowedGrantTypes != 'ClientCredentials'">
+                        <div class="form-row" ng-if="grantType != 'ClientCredentials'">
                             <div class="form-group col-5 col-md-3">
                                 <label class="control-label">Display URL</label>
                                 <input ng-model="client.ClientUri" class="form-control text-primary" placeholder="ex: https://www.example.com">
@@ -155,10 +155,10 @@
                             </div>
                             <div class="form-group col-md-5 required">
                                 <label class="control-label">Callback URL</label>
-                                <input ng-model="client.RedirectUris" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com/callback">
+                                <input ng-model="client.RedirectUris[0].RedirectUri" class="form-control text-primary" placeholder="ex: https://www.example.com/callback">
                             </div>
                         </div>
-                        <div class="form-row" ng-if="client.AllowedGrantTypes != 'ClientCredentials'">
+                        <div class="form-row" ng-if="grantType != 'ClientCredentials'">
                             <div class="form-group col-md-7 required">
                                 <label class="control-label">
                                     Description
@@ -169,10 +169,10 @@
                                 <div class="row">
                                     <div class="col form-group">
                                         <label class="control-label">Logout URL</label>
-                                        <input ng-model="client.PostLogoutRedirectUris" ng-list class="form-control text-primary" placeholder="ex: https://www.example.com">
+                                        <input ng-model="client.PostLogoutRedirectUris[0].PostLogoutRedirectUri" class="form-control text-primary" placeholder="ex: https://www.example.com">
                                     </div>
                                 </div>
-                                <div class="row" ng-if="client.AllowedGrantTypes == 'Hybrid'">
+                                <div class="row" ng-if="grantType == 'Hybrid'">
                                     <div class="col form-group">
                                         <label class="control-label">Client-side Logout URL</label>
                                         <input ng-model="client.FrontChannelLogoutUri" class="form-control text-primary" placeholder="ex: https://www.example.com/signout">
@@ -180,7 +180,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group required" ng-if="client.AllowedGrantTypes == 'ClientCredentials'">
+                        <div class="form-group required" ng-if="grantType == 'ClientCredentials'">
                             <label class="control-label">Description</label>
                             <textarea ng-model="client.Description" class="form-control text-primary"></textarea>
                         </div>
@@ -198,22 +198,21 @@
                             </small>
                         </h3>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 mt-4">
                                 <h5>Identity Resources</h5>
                             </div>
                             <div class="col-3" ng-repeat="scope in resources.identityScopes track by $index">
                                 <div class="checkbox cursor-pointer">
-                                    <input id="id-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope(scope)" class="pr-2">
+                                    <input id="id-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2">
                                     <label for="id-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="col-12">
+                            <div class="col-12 mt-4">
                                 <h5>API Resources</h5>
                             </div>
                             <div class="col-3" ng-repeat="scope in resources.apiScopes track by $index">
                                 <div class="checkbox cursor-pointer">
-                                    <input id="api-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope(scope)" class="pr-2">
+                                    <input id="api-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2">
                                     <label for="api-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
                                 </div>
                             </div>
@@ -226,12 +225,96 @@
                 </div>
                 <div class="tab-pane fade card" id="review">
                     <div class="card-body">
-                        Review
+                        <h3 class="text-primary text-center">
+                            <small>
+                                <b>Overview</b>
+                            </small>
+                        </h3>
+                        <div class="row mt-4 text-muted mb-2">
+                            <div class="col-md-4">
+                                <h4 class="text-primary"><i class="fas fa-key"></i> Client ID: <small>{{client.ClientId}}</small></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>Client Name: <small class="text-primary">{{client.ClientName}}</small></h4>
+                            </div>
+                            <div class="col-md-4">
+                                <h4>Grant: <small class="text-primary">{{grantType}}</small></h4>
+                            </div>
+                        </div>
+                        <div class="row text-muted">
+                            <div class="col">
+                                <h5>
+                                    Description<br />
+                                    <small class="text-primary">{{client.Description}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-auto text-center mb-2" ng-if="grantType != 'Implicit'">
+                                <h6 class="mb-1">Copy secret</h6>
+                                <a href="#" class="btn btn-outline-success" ng-click="clipboardText(client.ClientSecrets[0].Value)">
+                                    <i class="far fa-copy" title="Copy secret to clipboard"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row text-muted mt-3 mt-md-4" ng-if="grantType != 'ClientCredentials'">
+                            <div class="col-12 text-primary">
+                                <h4>Additional information</h4>
+                            </div>
+                            <div class="col-md-4" ng-if="client.ClientUri">
+                                <h5>
+                                    Display URL<br />
+                                    <small class="text-primary">{{client.ClientUri}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-md-4" ng-if="client.LogoUri">
+                                <h5>
+                                    Logo URL<br />
+                                    <small class="text-primary">{{client.LogoUri}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-md-4" ng-if="client.RedirectUris[0]">
+                                <h5>
+                                    Callback URL<br />
+                                    <small class="text-primary">{{client.RedirectUris[0].RedirectUri}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-md-4" ng-if="client.PostLogoutRedirectUris[0].PostLogoutRedirectUri">
+                                <h5>
+                                    Logout URL<br />
+                                    <small class="text-primary">{{client.PostLogoutRedirectUris[0].PostLogoutRedirectUri}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-md-4" ng-if="grantType == 'Implicit' && client.AllowedCorsOrigins[0]">
+                                <h5>
+                                    Allowed Cors Origin<br />
+                                    <small class="text-primary">{{client.AllowedCorsOrigins[0].AllowedCorsOrigin}}</small>
+                                </h5>
+                            </div>
+                            <div class="col-md-4" ng-if="grantType == 'Hybrid' && client.FrontChannelLogoutUri">
+                                <h5>
+                                    Client-side Logout URL<br />
+                                    <small class="text-primary">{{client.FrontChannelLogoutUri}}</small>
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="row text-muted mt-3 mt-md-4">
+                            <div class="col-12">
+                                <h4 class="text-primary">Allowed Scopes</h4>
+                                <span ng-repeat="scope in client.AllowedScopes track by $index">
+                                    {{scope.Scope}}{{ $index != client.AllowedScopes.length - 1 ? ',' : '' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="pt-5 nav justify-content-between">
+                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                            <a class="btn btn-success px-3" href="#" ng-click="create($event)">Create Client</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<a class="d-none"  asp-controller="Clients" asp-action="Index" id="cancel"></a>
 
 <script src="~/js/Clients/NewClientController.js"></script>
