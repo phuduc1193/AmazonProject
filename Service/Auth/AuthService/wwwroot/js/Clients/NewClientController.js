@@ -4,12 +4,11 @@
         $scope.progression = 0;
 
         $scope.client = {
-            Name: "",
-            DisplayName: "",
+            ClientId: "",
+            ClientName: "",
             Description: "",
-            AllowedGrantTypes: null,
-            Secrets: [],
-            AllowedScopes: []
+            AllowedScopes: [],
+            Enabled: true
         };
 
         $scope.activeTab = function (event, index) {
@@ -29,11 +28,11 @@
 
         $scope.shouldAdvanceScope = function (e) {
             e.preventDefault();
-            if (!$scope.client.Name || !$scope.client.DisplayName || !$scope.client.Description)
+            if (!$scope.client.ClientId || !$scope.client.ClientName || !$scope.client.Description)
                 return;
-            if ($scope.client.AllowedGrantTypes != 'Implicit' && $scope.client.Secrets.length == 0)
+            if ($scope.grantType != 'Implicit' && $scope.client.ClientSecrets.length == 0)
                 return;
-            if ($scope.client.AllowedGrantTypes != 'ClientCredentials' && !$scope.client.RedirectUris)
+            if ($scope.grantType != 'ClientCredentials' && !$scope.client.RedirectUris)
                 return;
 
             if ($scope.progression < 2)
@@ -46,20 +45,40 @@
         }
 
         $scope.setAllowedGrantTypes = function (type) {
-            $scope.client.AllowedGrantTypes = type;
+            $scope.grantType = type;
+            $scope.client.AllowedGrantTypes = [{ GrantType: type }];
+            switch (type) {
+                case 'Implicit':
+                    delete $scope.client.ClientSecrets;
+                    $scope.client.AllowedCorsOrigins = [{ Origin: "" }];
+                    $scope.client.RedirectUris = [{ RedirectUri: "" }];
+                    $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    break;
+                case 'Hybrid':
+                    $scope.client.ClientSecrets = [];
+                    delete $scope.client.AllowedCorsOrigins;
+                    $scope.client.RedirectUris = [{ RedirectUri: "" }];
+                    $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    break;
+                default:
+                    $scope.client.ClientSecrets = [];
+                    delete $scope.client.AllowedCorsOrigins;
+                    delete $scope.client.RedirectUris;
+                    delete $scope.client.PostLogoutRedirectUris;
+            }
             if ($scope.progression < 1)
                 $scope.progression = 1;
         }
 
         $scope.generateSecret = function (e) {
             e.preventDefault();
-            $scope.client.Secrets = [];
+            $scope.client.ClientSecrets = [];
             const secretString = sha256(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
             const secretData = {
                 Value: secretString,
                 Description: `Secret for ${$scope.client.Name}`
             };
-            $scope.client.Secrets.push(secretData);
+            $scope.client.ClientSecrets.push(secretData);
         }
 
         $scope.clipboardText = function (str) {
@@ -86,6 +105,30 @@
             if ($scope.progression < 3)
                 $scope.progression = 3;
             $('#review-tab').get(0).click();
+        }
+
+        $scope.create = function (e) {
+            e.preventDefault();
+            $http.post('New', $scope.client, {
+                headers: {
+                    'X-XSRF-TOKEN': $('#RequestVerificationToken').val()
+                }
+            }).then(function () {
+                $("#cancel").get(0).click();
+            }, function () {
+                bootbox.alert({
+                    message: '<div class="py-3">An unexpected error has occurred. Please try again!</div>',
+                    callback: function () {
+                        location.reload();
+                    },
+                    buttons: {
+                        ok: {
+                            label: 'Try again',
+                            className: 'btn btn-outline-danger'
+                        }
+                    }
+                });
+            });
         }
 
         function getScopes() {

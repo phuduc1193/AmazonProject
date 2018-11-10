@@ -7,5 +7,6 @@ namespace AuthService.Common.Interfaces.Services
     public interface IClientService
     {
         Task<List<Client>> GetListClientsAsync();
+        Task<bool> AddClientAsync(Client client);
     }
 }

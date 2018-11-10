@@ -16,6 +16,13 @@ namespace AuthService.DataAccess
             _context = context;
         }
 
+        public async Task<int> AddClientAsync(Client client)
+        {
+            _context.Clients.Add(client);
+            var result = await _context.SaveChangesAsync();
+            return result;
+        }
+
         public async Task<List<Client>> GetListClientsAsync()
         {
             var results = await _context.Clients

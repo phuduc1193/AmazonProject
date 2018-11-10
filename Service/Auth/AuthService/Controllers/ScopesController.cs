@@ -13,7 +13,7 @@ namespace AuthService.Controllers
     [Route("api/[controller]")]
     public class ScopesController : ControllerBase
     {
-        private IResourceStore _resources;
+        private readonly IResourceStore _resources;
 
         public ScopesController(IResourceStore resources)
         {
