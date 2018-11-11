@@ -16,8 +16,10 @@
 
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+<input type="hidden" id="Data"
+       name="RequestVerificationToken" value="@ViewData["Data"]">
 
-<div class="container-fluid" ng-controller="NewClientController">
+<div class="container-fluid" ng-controller="EditClientController">
     <div class="row">
         <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
             <ul class="breadcrumb nav">
@@ -91,7 +93,8 @@
                         </div>
                         <div class="row mt-5">
                             <div class="col px-0 nav justify-content-between">
-                                <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                                <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
+                                <a class="btn px-3" href="#" ng-class="{'btn-danger': client.Enabled, 'btn-success': !client.Enabled}" ng-click="toggleEnabledClient($event)">{{ client.Enabled ? 'Disable Client' : 'Enable Client' }}</a>
                                 <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceInfo($event)">Next</a>
                             </div>
                         </div>
@@ -185,7 +188,7 @@
                             <textarea ng-model="client.Description" class="form-control text-primary"></textarea>
                         </div>
                         <div class="pt-5 nav justify-content-between">
-                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                            <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
                             <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceScope($event)">Next</a>
                         </div>
                     </div>
@@ -203,8 +206,8 @@
                             </div>
                             <div class="col-3" ng-repeat="scope in resources.identityScopes track by $index">
                                 <div class="checkbox cursor-pointer">
-                                    <input id="id-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2">
-                                    <label for="id-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
+                                    <input id="scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2" ng-checked="shouldCheck(scope)">
+                                    <label for="scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
                                 </div>
                             </div>
                             <div class="col-12 mt-4">
@@ -212,13 +215,13 @@
                             </div>
                             <div class="col-3" ng-repeat="scope in resources.apiScopes track by $index">
                                 <div class="checkbox cursor-pointer">
-                                    <input id="api-scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2">
-                                    <label for="api-scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
+                                    <input id="scope-{{scope}}" type="checkbox" ng-click="addOrRemoveScope({ Scope: scope })" class="pr-2" ng-checked="shouldCheck(scope)">
+                                    <label for="scope-{{scope}}" class="align-middle text-black-50 px-1">{{ scope }}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="pt-5 nav justify-content-between">
-                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
+                            <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
                             <a class="btn btn-primary px-3" href="#" ng-click="shouldAdvanceFinal($event)">Next</a>
                         </div>
                     </div>
@@ -305,8 +308,8 @@
                             </div>
                         </div>
                         <div class="pt-5 nav justify-content-between">
-                            <a class="btn btn-light px-3" asp-action="New">Reset</a>
-                            <a class="btn btn-success px-3" href="#" ng-click="create($event)">Create Client</a>
+                            <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
+                            <a class="btn btn-success px-3" href="#" ng-click="update($event)">Change</a>
                         </div>
                     </div>
                 </div>
@@ -315,6 +318,6 @@
     </div>
 </div>
 
-<a class="d-none"  asp-controller="Clients" asp-action="Index" id="cancel"></a>
+<a class="d-none" asp-controller="Clients" asp-action="Index" id="cancel"></a>
 
-<script src="~/js/Clients/NewClientController.js"></script>
+<script src="~/js/Clients/EditClientController.js"></script>

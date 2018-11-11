@@ -63,26 +63,26 @@ else
                                     }
                                 </td>
                                 <td>
-                                    @{ var lastScope = client.AllowedScopes.Last(); }
+                                    @{ var firstScope = client.AllowedScopes.FirstOrDefault(); }
                                     @foreach (var clientScope in client.AllowedScopes)
                                     {
-                                        @clientScope.Scope
-                                        @if (!clientScope.Equals(lastScope))
+                                        @if (!clientScope.Equals(firstScope))
                                         {
-                                            <span>, </span>
+                                            <span class="pr-1">,</span>
                                         }
+                                        @clientScope.Scope
                                     }
                                 </td>
                                 <td class="align-middle text-center">
                                     <a asp-controller="Clients" asp-action="Edit" asp-route-id="@client.Id"
-                                       data-toggle="tooltip" data-placement="top" title="Edit resource">
+                                       data-toggle="tooltip" data-placement="top" title="Edit client">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                 </td>
                                 <td class="align-middle text-center">
                                     <form asp-action="Delete" asp-route-id="@client.Id">
                                         <a class="text-danger" href="#" onclick="$(this).closest('form').submit();"
-                                           data-toggle="tooltip" data-placement="top" title="Remove resource">
+                                           data-toggle="tooltip" data-placement="top" title="Remove client">
                                             <i class="fas fa-minus-circle"></i>
                                         </a>
                                     </form>

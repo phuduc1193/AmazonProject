@@ -51,14 +51,14 @@ namespace AuthService.DataAccess
             var scopesToDelete = (
                 from scope in _context.ApiScopes
                 where scope.ApiResource == apiResource
-                    && !apiResource.Scopes.Contains(scope)
+                    && (apiResource.Scopes == null || !apiResource.Scopes.Contains(scope))
                 select scope
             );
             _context.ApiScopes.RemoveRange(scopesToDelete);
             var secretsToDelete = (
                 from secret in _context.ApiSecrets
                 where secret.ApiResource == apiResource
-                    && !apiResource.Secrets.Contains(secret)
+                    && (apiResource.Secrets == null || !apiResource.Secrets.Contains(secret))
                 select secret
             );
             _context.ApiSecrets.RemoveRange(secretsToDelete);

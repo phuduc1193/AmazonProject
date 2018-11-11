@@ -1,15 +1,14 @@
 ﻿angular.module('authServiceApp', [])
-    .controller('NewClientController', ['$http', '$scope', function ($http, $scope) {
+    .controller('EditClientController', ['$http', '$scope', function ($http, $scope) {
         $scope.activeTabIndex = 0;
-        $scope.progression = 0;
+        $scope.progression = 4;
 
-        $scope.client = {
-            ClientId: "",
-            ClientName: "",
-            Description: "",
-            AllowedScopes: [],
-            Enabled: true
-        };
+        const data = JSON.parse($("#Data").val());
+
+        if (data) {
+            $scope.client = data;
+            $scope.grantType = $scope.client.AllowedGrantTypes[0].GrantType;
+        }
 
         $scope.activeTab = function (event, index) {
             if (index > $scope.progression) {
@@ -76,7 +75,7 @@
             const secretString = sha256(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
             const secretData = {
                 Value: secretString,
-                Description: `Secret for ${$scope.client.ClientId}`
+                Description: `Secret for ${$scope.client.Name}`
             };
             $scope.client.ClientSecrets.push(secretData);
         }
@@ -109,9 +108,22 @@
             $('#review-tab').get(0).click();
         }
 
-        $scope.create = function (e) {
+        $scope.shouldCheck = function (scope) {
+            if (!$scope.client || $scope.client.AllowedScopes.length == 0)
+                return false;
+            return $scope.client.AllowedScopes.filter(function (s) {
+                return s.Scope == scope;
+            }).length > 0;
+        }
+
+        $scope.update = function (e) {
             e.preventDefault();
-            $http.post('New', $scope.client, {
+            if (!$scope.client.AllowedCorsOrigins || !$scope.client.AllowedCorsOrigins.Origin)
+                delete $scope.client.AllowedCorsOrigins;
+            if (!$scope.client.PostLogoutRedirectUris || !$scope.client.PostLogoutRedirectUris.PostLogoutRedirectUri)
+                delete $scope.client.PostLogoutRedirectUris;
+
+            $http.put('Edit', $scope.client, {
                 headers: {
                     'X-XSRF-TOKEN': $('#RequestVerificationToken').val()
                 }
@@ -153,4 +165,9 @@
         }
 
         getScopes();
+
+        $scope.toggleEnabledClient = function (e) {
+            e.preventDefault();
+            $scope.client.Enabled = !$scope.client.Enabled;
+        }
     }]);

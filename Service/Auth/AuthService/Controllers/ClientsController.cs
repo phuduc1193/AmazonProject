@@ -6,6 +6,7 @@ using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -48,6 +49,40 @@ namespace AuthService.Controllers
             if (success)
                 return Success();
             return Error();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var jsonSerializerSettings = new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+            var client = await _service.GetClientByIdAsync(id);
+            var jsonString = JsonConvert.SerializeObject(client, Formatting.None, jsonSerializerSettings);
+            ViewData["Data"] = jsonString;
+            ViewData["Id"] = id;
+            return View();
+        }
+
+        [HttpPut]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromBody] Client client)
+        {
+            var success = await _service.UpdateClientAsync(client);
+            if (success)
+                return Success();
+            return Error();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await _service.RemoveClientByIdAsync(id);
+            if (success)
+                return RedirectToAction("Index");
+
+            TempData["ErrorMessage"] = "Cannot delete API Resource. Please try again!";
+            return RedirectToAction("Index");
         }
 
         private IActionResult Success()
