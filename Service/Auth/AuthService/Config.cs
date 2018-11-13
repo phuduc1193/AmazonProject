@@ -97,10 +97,12 @@ namespace AuthService
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory<ApplicationUser, ApplicationRole>>();
 
             services.AddScoped<IApiResourceRepository, ApiResourceRepository>();
+            services.AddScoped<IIdentityResourceRepository, IdentityResourceRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
 
             services.AddScoped<IUserService<TUser>, UserService<TUser>>();
             services.AddScoped<IApiResourceService, ApiResourceService>();
+            services.AddScoped<IIdentityResourceService, IdentityResourceService>();
             services.AddScoped<IClientService, ClientService>();
 
             return services;

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "New API Resource";
+    ViewData["Title"] = "New Identity Resource";
 }
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -14,9 +14,9 @@
 
 <div class="container">
     <div class="page-header">
-        <h3><small>New API Resource</small></h3>
+        <h3><small>New Identity Resource</small></h3>
     </div>
-    <div class="card" ng-controller="NewApiResourceController as api">
+    <div class="card" ng-controller="NewIdentityResourceController">
         <div class="card-header">
             Information
         </div>
@@ -83,12 +83,10 @@
                                         <th>Display Name</th>
                                         <th>Description</th>
                                         <th>
-                                            Required
-                                            <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
+                                            Required <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
                                         </th>
                                         <th>
-                                            Emphasize
-                                            <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
+                                            Emphasize <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
                                         </th>
                                         <th></th>
                                     </tr>
@@ -149,4 +147,4 @@
     </div>
 </div>
 
-<script src="~/js/ApiResources/NewApiResourceController.js"></script>
+<script src="~/js/IdentityResources/NewIdentityResourceController.js"></script>

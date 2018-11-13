@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Edit Identity Resource";
+}
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+<input type="hidden" id="RequestVerificationToken"
+       name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+<input type="hidden" id="Data"
+       name="RequestVerificationToken" value="@ViewData["Data"]">
+
+<div class="container" ng-controller="EditIdentityResourceController">
+    <div class="page-header">
+        <h3><small>Edit Resource</small> {{identity.Name}}</h3>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Information
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-4 required">
+                    <label class="control-label">
+                        Display Name
+                    </label>
+                    <input ng-model="identity.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
+                </div>
+                <div class="col-md-2 d-md-block d-none form-group offset-md-2">
+                    <span class="mx-2">
+                        Required
+                        <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
+                    </span>
+                    <label class="m-0 mx-3 switch">
+                        <input type="checkbox" ng-model="identity.Required" ng-true-value="true" ng-false-value="false">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="col-md-2 d-md-block d-none form-group">
+                    <span class="mx-2">
+                        Emphasize
+                        <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
+                    </span>
+                    <label class="m-0 mx-3 switch">
+                        <input type="checkbox" ng-model="identity.Emphasize" ng-true-value="true" ng-false-value="false">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="col-md-2 d-md-block d-none form-group">
+                    <span>Resource Status</span>
+                    <label class="m-0 mx-3 switch">
+                        <input type="checkbox" ng-model="identity.Enabled" ng-true-value="true" ng-false-value="false">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="control-label">
+                    Description
+                </label>
+                <textarea ng-model="identity.Description" class="form-control text-primary"></textarea>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    Claims
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3" ng-repeat="claim in claims track by $index">
+                            <div class="checkbox cursor-pointer m-0 row">
+                                <input id="id-claim-{{claim}}" type="checkbox" ng-click="addOrRemoveClaim(claim)" class="pr-2 mt-1 col-auto" ng-checked="shouldCheck(claim)">
+                                <label for="id-claim-{{claim}}" class="text-black-50 px-1 col ellipsis" title="{{claim.name}}">{{ claim.name }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success" ng-click="edit()">Change</button>
+                <a id="cancel" class="btn btn-light float-right" asp-controller="IdentityResources" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/IdentityResources/EditIdentityResourceController.js"></script>
