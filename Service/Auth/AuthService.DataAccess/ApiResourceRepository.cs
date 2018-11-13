@@ -62,6 +62,13 @@ namespace AuthService.DataAccess
                 select secret
             );
             _context.ApiSecrets.RemoveRange(secretsToDelete);
+            var claimsToDelete = (
+                from claim in _context.ApiClaims
+                where claim.ApiResource == apiResource
+                    && (apiResource.UserClaims == null || !apiResource.UserClaims.Contains(claim))
+                select claim
+            );
+            _context.ApiClaims.RemoveRange(claimsToDelete);
             var result = await _context.SaveChangesAsync();
             return result;
         }

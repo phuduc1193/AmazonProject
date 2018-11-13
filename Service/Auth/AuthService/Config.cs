@@ -98,12 +98,10 @@ namespace AuthService
 
             services.AddScoped<IApiResourceRepository, ApiResourceRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
-            services.AddScoped<IClaimRepository, ClaimRepository>();
 
             services.AddScoped<IUserService<TUser>, UserService<TUser>>();
             services.AddScoped<IApiResourceService, ApiResourceService>();
             services.AddScoped<IClientService, ClientService>();
-            services.AddScoped<IClaimService, ClaimService>();
 
             return services;
         }

@@ -31,7 +31,7 @@ else
         </div>
         <div class="row">
             <div class="col-12">
-                <table id="dataTable" class="table table-bordered">
+                <table id="dataTable" class="table table-bordered table-responsive-md">
                     <thead class="thead-light">
                         <tr>
                             <th class="align-middle text-center" scope="col">#</th>
@@ -63,14 +63,17 @@ else
                                     }
                                 </td>
                                 <td>
-                                    @{ var firstScope = client.AllowedScopes.FirstOrDefault(); }
+                                    @{ var lastScope = client.AllowedScopes.LastOrDefault(); }
                                     @foreach (var clientScope in client.AllowedScopes)
                                     {
-                                        @if (!clientScope.Equals(firstScope))
+                                        @if (!clientScope.Equals(lastScope))
                                         {
-                                            <span class="pr-1">,</span>
+                                            @clientScope.Scope<span class="pr-1">,</span>
                                         }
-                                        @clientScope.Scope
+                                        else
+                                        {
+                                            @clientScope.Scope
+                                        }
                                     }
                                 </td>
                                 <td class="align-middle text-center">

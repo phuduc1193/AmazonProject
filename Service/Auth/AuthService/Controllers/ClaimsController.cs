@@ -1,25 +1,31 @@
-﻿using AuthService.Common;
-using AuthService.Common.Interfaces.Services;
-using AuthService.Helpers;
-using Microsoft.AspNetCore.Authorization;
+﻿using AuthService.Helpers;
+using AuthService.ViewModels;
+using IdentityModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace AuthService.Controllers
 {
-    [SecurityHeaders]
-    [Authorize(Roles = Const.DefaultRoles.Admin)]
-    public class ClaimsController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ClaimsController : ControllerBase
     {
-        private readonly IClaimService _service;
-
-        public ClaimsController(IClaimService service)
+        [HttpGet]
+        public List<ApiResourceClaimViewModel> List()
         {
-            _service = service;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            var claims = new List<ApiResourceClaimViewModel>();
+            var fields = typeof(JwtClaimTypes).GetFields(BindingFlags.Static | BindingFlags.Public);
+            foreach (var fieldInfo in fields)
+            {
+                var claim = new ApiResourceClaimViewModel
+                {
+                    Name = fieldInfo.Name.AddSpaceBeforeUppercase(),
+                    Type = fieldInfo.GetValue(null).ToString()
+                };
+                claims.Add(claim);
+            }
+            return claims;
         }
     }
 }

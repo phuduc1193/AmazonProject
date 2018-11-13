@@ -22,22 +22,26 @@
         </div>
         <div class="card-body">
             <div class="form-row">
-                <div class="form-group col-5 col-md-3">
-                    <label>
+                <div class="form-group col-5 col-md-3 required">
+                    <label class="control-label">
                         Resource ID
-                        <i class="fas fa-info-circle cursor-pointer hover-darken pl-1" title="Unique Identifier for the Resource"></i>
                     </label>
+                    <i class="fas fa-info-circle cursor-pointer hover-darken pl-1" title="Unique Identifier for the Resource"></i>
                     <input ng-model="api.Name" class="form-control text-primary" placeholder="ex: authentication.api" autofocus>
                 </div>
-                <div class="form-group col-7 col-md-4">
-                    <label>Display Name</label>
+                <div class="form-group col-7 col-md-4 required">
+                    <label class="control-label">
+                        Display Name
+                    </label>
                     <input ng-model="api.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
                 </div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-5 required">
                     <div class="row">
                         <div class="col-12">
-                            <label>API Secret</label>
-                            <a href="#" class="float-right" ng-click="api.generateSecret()">Generate secret</a>
+                            <label class="control-label">
+                                API Secret
+                            </label>
+                            <a href="#" class="float-right px-1" ng-click="api.generateSecret()">Generate secret</a>
                         </div>
                         <div class="col-12 px-3">
                             <div class="align-items-center row">
@@ -52,62 +56,87 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Description</label>
+            <div class="form-group required">
+                <label class="control-label">
+                    Description
+                </label>
                 <textarea ng-model="api.Description" class="form-control text-primary"></textarea>
             </div>
-            <div class="card mb-3">
-                <div class="card-header align-content-center d-flex justify-content-between">
-                    <b class="align-self-center">Api Scopes</b>
-                    <button class="btn btn-info" ng-click="api.addScope()">Add scope</button>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="scopes-tab" data-toggle="tab" href="#scopes">Scopes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="claims-tab" data-toggle="tab" href="#claims">Claims</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="scopes">
+                    <div class="border border-light border-top-0 mb-3 rounded-bottom">
+                        <div class="card-body">
+                            <table class="table table-bordered table-sm table-responsive-md">
+                                <thead class="text-black-50">
+                                    <tr>
+                                        <th>
+                                            Name <i class="fas fa-info-circle px-1" title="Unique across all API resources"></i>
+                                        </th>
+                                        <th>Display Name</th>
+                                        <th>Description</th>
+                                        <th>
+                                            Required <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
+                                        </th>
+                                        <th>
+                                            Emphasize <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="content">
+                                    <tr ng-repeat="scope in api.Scopes track by $index">
+                                        <td class="table-input">
+                                            <input ng-model="scope.Name" type="text" class="form-control text-primary">
+                                        </td>
+                                        <td class="table-input">
+                                            <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
+                                        </td>
+                                        <td class="table-input">
+                                            <input ng-model="scope.Description" type="text" class="form-control text-primary">
+                                        </td>
+                                        <td class="table-input">
+                                            <input ng-model="scope.Required" type="checkbox">
+                                        </td>
+                                        <td class="table-input">
+                                            <input ng-model="scope.Emphasize" type="checkbox">
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <a class="text-danger" href="#" ng-click="api.removeScope($index)" ng-class="{ 'd-none': $index == 0 && api.Scopes.length == 1 }">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </a>
+                                            <a class="text-muted not-allowed" href="#" title="At least one scope is required"
+                                               ng-class="{ 'd-none': $index != 0 || api.Scopes.length != 1 }">
+                                                <i class="fas fa-minus-circle"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="btn btn-info" ng-click="api.addScope()">Add scope</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-bordered table-sm">
-                        <thead class="text-black-50">
-                            <tr>
-                                <th>
-                                    Name <small class="px-1"><i class="fas fa-info-circle" title="Unique across all API resources"></i></small>
-                                </th>
-                                <th>Display Name</th>
-                                <th>Description</th>
-                                <th>
-                                    Required <i class="fas fa-info-circle px-1" title="Consent to use resource is required to complete authentication"></i>
-                                </th>
-                                <th>
-                                    Emphasize <i class="fas fa-info-circle px-1" title="Emphasize resource name on consent screen"></i>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="content">
-                            <tr ng-repeat="scope in api.Scopes track by $index">
-                                <td class="table-input">
-                                    <input ng-model="scope.Name" type="text" class="form-control text-primary">
-                                </td>
-                                <td class="table-input">
-                                    <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
-                                </td>
-                                <td class="table-input">
-                                    <input ng-model="scope.Description" type="text" class="form-control text-primary">
-                                </td>
-                                <td class="table-input">
-                                    <input ng-model="scope.Required" type="checkbox">
-                                </td>
-                                <td class="table-input">
-                                    <input ng-model="scope.Emphasize" type="checkbox">
-                                </td>
-                                <td class="align-middle text-center">
-                                    <a class="text-danger" href="#" ng-click="api.removeScope($index)" ng-class="{ 'd-none': $index == 0 && api.Scopes.length == 1 }">
-                                        <i class="fas fa-minus-circle"></i>
-                                    </a>
-                                    <a class="text-muted not-allowed" href="#" title="At least one scope is required"
-                                       ng-class="{ 'd-none': $index != 0 || api.Scopes.length != 1 }">
-                                        <i class="fas fa-minus-circle"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="tab-pane fade" id="claims">
+                    <div class="border border-light border-top-0 mb-3 rounded-bottom">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 col-md-3" ng-repeat="claim in api.claims track by $index">
+                                    <div class="checkbox cursor-pointer row">
+                                        <input id="id-claim-{{claim}}" type="checkbox" ng-click="api.addOrRemoveClaim(claim)" class="pr-2 mt-1" ng-checked="api.shouldCheck(claim)">
+                                        <label for="id-claim-{{claim}}" class="text-black-50 px-1 col ellipsis" title="{{claim.name}}">{{ claim.name }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">

@@ -75,6 +75,10 @@
             padding-left: 15px;
         }
 
+        .breadcrumb li:last-child a {
+            padding-right: 15px;
+        }
+
         .breadcrumb li a:hover {
             color: white;
             background: #0d7661;

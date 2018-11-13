@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using AuthService.Common;
@@ -43,10 +44,27 @@ namespace AuthService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromBody] ApiResource apiResource)
         {
+            if (!IsValidResource(apiResource))
+                return Error();
+
             var success = await _service.AddApiResourceAsync(apiResource);
             if (success)
                 return Success();
             return Error();
+        }
+
+        private bool IsValidResource(ApiResource apiResource)
+        {
+            if (apiResource == null
+                || string.IsNullOrWhiteSpace(apiResource.Name)
+                || string.IsNullOrWhiteSpace(apiResource.DisplayName)
+                || string.IsNullOrWhiteSpace(apiResource.Description))
+                return false;
+            if (apiResource.Secrets == null
+                || apiResource.Secrets.Count == 0
+                || string.IsNullOrWhiteSpace(apiResource.Secrets.First().Value))
+                return false;
+            return true;
         }
 
         [HttpGet]
@@ -63,6 +81,9 @@ namespace AuthService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromBody] ApiResource apiResource)
         {
+            if (!IsValidResource(apiResource))
+                return Error();
+
             var success = await _service.UpdateApiResourceAsync(apiResource);
             if (success)
                 return Success();
