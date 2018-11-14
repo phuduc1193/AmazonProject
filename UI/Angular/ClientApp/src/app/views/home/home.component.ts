@@ -12,12 +12,12 @@ export class HomeComponent implements OnInit {
   register: boolean = false;
   appName: string;
 
-  @Select(AuthState.isLoggedIn)
-  isLoggedIn$: Observable<boolean>;
-
   constructor(@Inject("APP_NAME") appName: string) {
     this.appName = appName;
   }
+
+  @Select(AuthState.isLoggedIn)
+  isLoggedIn$: Observable<boolean>;
 
   ngOnInit() {}
 }

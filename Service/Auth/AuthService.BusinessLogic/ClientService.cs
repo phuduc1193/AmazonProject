@@ -1,7 +1,6 @@
 ﻿using AuthService.Common.Interfaces.Repositories;
 using AuthService.Common.Interfaces.Services;
 using IdentityServer4.EntityFramework.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

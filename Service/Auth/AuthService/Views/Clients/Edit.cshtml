@@ -142,7 +142,7 @@
                                 <div class="row">
                                     <div class="col form-group">
                                         <label class="control-label">Allowed Cors Origin</label>
-                                        <input ng-model="client.AllowedCorsOrigins[0].AllowedCorsOrigin" class="form-control text-primary" placeholder="ex: https://www.example.com">
+                                        <input ng-model="client.AllowedCorsOrigins[0].Origin" class="form-control text-primary" placeholder="ex: https://www.example.com">
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@
                             </div>
                         </div>
                         <div class="form-row" ng-if="grantType != 'ClientCredentials'">
-                            <div class="form-group col-md-7 required">
+                            <div class="form-group col-md-5 required">
                                 <label class="control-label">
                                     Description
                                 </label>
@@ -182,10 +182,32 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group col-md-2">
+                                <span class="mx-sm-2">
+                                    Consent
+                                    <i class="fas fa-info-circle px-1" title="Show the consent screen to user after authenticated"></i>
+                                </span>
+                                <label class="m-0 mx-3 switch">
+                                    <input type="checkbox" ng-model="client.RequireConsent" ng-true-value="true" ng-false-value="false">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-group required" ng-if="grantType == 'ClientCredentials'">
-                            <label class="control-label">Description</label>
-                            <textarea ng-model="client.Description" class="form-control text-primary"></textarea>
+                        <div class="form-row" ng-if="grantType == 'ClientCredentials'">
+                            <div class="form-group col-md-10 required">
+                                <label class="control-label">Description</label>
+                                <textarea ng-model="client.Description" class="form-control text-primary"></textarea>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <span class="mx-sm-2">
+                                    Consent
+                                    <i class="fas fa-info-circle px-1" title="Show the consent screen to user after authenticated"></i>
+                                </span>
+                                <label class="m-0 mx-3 switch">
+                                    <input type="checkbox" ng-model="client.RequireConsent" ng-true-value="true" ng-false-value="false">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
                         <div class="pt-5 nav justify-content-between">
                             <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
@@ -286,10 +308,10 @@
                                     <small class="text-primary">{{client.PostLogoutRedirectUris[0].PostLogoutRedirectUri}}</small>
                                 </h5>
                             </div>
-                            <div class="col-md-4" ng-if="grantType == 'Implicit' && client.AllowedCorsOrigins[0] && client.AllowedCorsOrigins[0].AllowedCorsOrigin">
+                            <div class="col-md-4" ng-if="grantType == 'Implicit' && client.AllowedCorsOrigins[0] && client.AllowedCorsOrigins[0].Origin">
                                 <h5>
                                     Allowed Cors Origin<br />
-                                    <small class="text-primary">{{client.AllowedCorsOrigins[0].AllowedCorsOrigin}}</small>
+                                    <small class="text-primary">{{client.AllowedCorsOrigins[0].Origin}}</small>
                                 </h5>
                             </div>
                             <div class="col-md-4" ng-if="grantType == 'Hybrid' && client.FrontChannelLogoutUri">
@@ -309,7 +331,7 @@
                         </div>
                         <div class="pt-5 nav justify-content-between">
                             <a class="btn btn-light px-3" asp-controller="Clients" asp-action="Edit" asp-route-id="@ViewData["Id"]">Reset</a>
-                            <a class="btn btn-success px-3" href="#" ng-click="update($event)">Change</a>
+                            <button class="btn btn-success px-3" ng-click="update()">Change</button>
                         </div>
                     </div>
                 </div>

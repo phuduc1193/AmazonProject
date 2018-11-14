@@ -21,6 +21,10 @@ namespace AuthService
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", Config.GenerateCorsPolicy());
+            });
             services.AddMvc();
             services.AddDbContexts<ApplicationDbContext>(Configuration);
             services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, ApplicationRole, AppClaimsPrincipalFactory<ApplicationUser, ApplicationRole>, ApplicationProfileService, ApplicationDbContext, ApplicationDbContext>(Configuration, Environment);

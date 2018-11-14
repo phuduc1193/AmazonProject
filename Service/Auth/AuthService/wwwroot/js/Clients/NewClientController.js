@@ -8,7 +8,8 @@
             ClientName: "",
             Description: "",
             AllowedScopes: [],
-            Enabled: true
+            Enabled: true,
+            RequireConsent: true
         };
 
         $scope.activeTab = function (event, index) {
@@ -46,25 +47,33 @@
 
         $scope.setAllowedGrantTypes = function (type) {
             $scope.grantType = type;
-            $scope.client.AllowedGrantTypes = [{ GrantType: type }];
             switch (type) {
                 case 'Implicit':
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'implicit' }];
                     delete $scope.client.ClientSecrets;
+                    $scope.client.RequireClientSecret = false;
                     $scope.client.AllowedCorsOrigins = [{ Origin: "" }];
                     $scope.client.RedirectUris = [{ RedirectUri: "" }];
                     $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    $scope.client.AllowAccessTokensViaBrowser = true;
                     break;
                 case 'Hybrid':
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'hybrid' }];
                     $scope.client.ClientSecrets = [];
+                    $scope.client.RequireClientSecret = true;
                     delete $scope.client.AllowedCorsOrigins;
                     $scope.client.RedirectUris = [{ RedirectUri: "" }];
                     $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    delete $scope.client.AllowAccessTokensViaBrowser;
                     break;
                 default:
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'client_credentials' }];
                     $scope.client.ClientSecrets = [];
+                    $scope.client.RequireClientSecret = true;
                     delete $scope.client.AllowedCorsOrigins;
                     delete $scope.client.RedirectUris;
                     delete $scope.client.PostLogoutRedirectUris;
+                    delete $scope.client.AllowAccessTokensViaBrowser;
             }
             if ($scope.progression < 1)
                 $scope.progression = 1;

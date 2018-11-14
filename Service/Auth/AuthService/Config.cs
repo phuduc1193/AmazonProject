@@ -15,6 +15,7 @@ using AuthService.Common.Interfaces.Repositories;
 using AuthService.Common.Interfaces.Contexts;
 using AuthService.Common.Interfaces.Models;
 using AuthService.Common.Models;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace AuthService
 {
@@ -106,6 +107,17 @@ namespace AuthService
             services.AddScoped<IClientService, ClientService>();
 
             return services;
+        }
+
+        public static CorsPolicy GenerateCorsPolicy()
+        {
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin(); // For anyone access.
+                                          //corsBuilder.WithOrigins("http://localhost:56573"); // for a specific url. Don't add a forward slash on the end!
+            corsBuilder.AllowCredentials();
+            return corsBuilder.Build();
         }
     }
 }

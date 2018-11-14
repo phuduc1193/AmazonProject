@@ -2,22 +2,10 @@
 <div class="row py-4 d-flex">
   <div class="col-12">
     <div class="card-deck">
-      <div appHomePromotedProduct
-           class="card"></div>
-      <div appHomeDealOfTheDay
-           class="card"></div>
-      <div appHomeAds
-           class="card"></div>
-      <div appHomeLogin
-           [appName]="appName"
-           class="card d-none d-lg-block"
-           (register)="register = true"
-           *ngIf="!register  && !(isLoggedIn$ | async)"></div>
-      <div appHomeRegister
-           [appName]="appName"
-           class="card d-none d-lg-block"
-           (logIn)="register = false"
-           *ngIf="register && !(isLoggedIn$ | async)"></div>
+      <div appHomePromotedProduct class="card"></div>
+      <div appHomeDealOfTheDay class="card"></div>
+      <div appHomeAds class="card"></div>
+      <div appHomeAuth class="card"></div>
     </div>
   </div>
 </div>
@@ -27,12 +15,8 @@
 <div class="mb-3">
   <app-home-trending-products></app-home-trending-products>
 </div>
-<div class="mb-3 d-none d-lg-block">
-  <app-home-movies></app-home-movies>
-</div>
-<div class="mb-3">
-  <app-home-most-wished></app-home-most-wished>
-</div>
+<div class="mb-3 d-none d-lg-block"><app-home-movies></app-home-movies></div>
+<div class="mb-3"><app-home-most-wished></app-home-most-wished></div>
 <div class="mb-3">
   <app-home-book-best-sellers></app-home-book-best-sellers>
 </div>

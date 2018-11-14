@@ -1,20 +1,64 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
+import { UserManager, UserManagerSettings, User } from "oidc-client";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class AuthService {
-  constructor(
-    private http: HttpClient,
-    @Inject("BASE_URL") private baseUrl: string
-  ) {}
+  private static readonly manager = new UserManager(getClientSettings());
+  private user: User = null;
 
-  public login(username: string, password: string) {
-    const data = { username: username, password: password };
-    return this.http.post(this.baseUrl + "api/auth/login", data);
+  constructor() {
+    AuthService.manager.getUser().then((user: User) => {
+      this.user = user;
+    });
   }
 
-  public register(username: string, password: string) {
-    const data = { username: username, password: password };
-    return this.http.post(this.baseUrl + "api/auth/register", data);
+  isLoggedIn(): boolean {
+    return this.user != null && !this.user.expired;
   }
+
+  static isLoggedIn(): Promise<boolean> {
+    return new Promise<boolean>(resolve => {
+      AuthService.manager.getUser().then((user: User) => {
+        let result: boolean = user != null && !user.expired;
+        resolve(result);
+      });
+    });
+  }
+
+  getClaims(): any {
+    return this.user.profile;
+  }
+
+  getAuthorizationHeaderValue(): string {
+    return `${this.user.token_type} ${this.user.access_token}`;
+  }
+
+  startAuthentication(): Promise<void> {
+    return AuthService.manager.signinRedirect();
+  }
+
+  completeAuthentication(): Promise<void> {
+    return AuthService.manager.signinRedirectCallback().then(user => {
+      this.user = user;
+    });
+  }
+
+  logOut(): Promise<void> {
+    return AuthService.manager.signoutRedirect();
+  }
+}
+
+export function getClientSettings(): UserManagerSettings {
+  return {
+    authority: "http://localhost:5000/",
+    client_id: "spa",
+    redirect_uri: "http://localhost:4200",
+    post_logout_redirect_uri: "http://localhost:4200",
+    response_type: "id_token token",
+    scope: "openid profile email address phone",
+    filterProtocolClaims: true,
+    loadUserInfo: true
+  };
 }

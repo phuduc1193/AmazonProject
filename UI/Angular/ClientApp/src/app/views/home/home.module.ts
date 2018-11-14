@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgBootstrapFormValidationModule } from "ng-bootstrap-form-validation";
 
 import { HomeComponent } from "./home.component";
-import { HomeLoginComponent } from "./home-login/home-login.component";
 import { HomeDealsComponent } from "./home-deals/home-deals.component";
 import { HomePromotedProductComponent } from "./home-promoted-product/home-promoted-product.component";
 import { HomeDealOfTheDayComponent } from "./home-deal-of-the-day/home-deal-of-the-day.component";
@@ -15,7 +14,7 @@ import { HomeElectronicBestSellersComponent } from "./home-electronic-best-selle
 import { HomeTrendingProductsComponent } from "./home-trending-products/home-trending-products.component";
 import { HomeMostWishedComponent } from "./home-most-wished/home-most-wished.component";
 import { HomeMoviesComponent } from "./home-movies/home-movies.component";
-import { HomeRegisterComponent } from './home-register/home-register.component';
+import { HomeAuthComponent } from './home-auth/home-auth.component';
 
 @NgModule({
   imports: [
@@ -27,7 +26,6 @@ import { HomeRegisterComponent } from './home-register/home-register.component';
   ],
   declarations: [
     HomeComponent,
-    HomeLoginComponent,
     HomeDealsComponent,
     HomePromotedProductComponent,
     HomeDealOfTheDayComponent,
@@ -37,7 +35,7 @@ import { HomeRegisterComponent } from './home-register/home-register.component';
     HomeTrendingProductsComponent,
     HomeMostWishedComponent,
     HomeMoviesComponent,
-    HomeRegisterComponent
+    HomeAuthComponent
   ]
 })
 export class HomeModule {

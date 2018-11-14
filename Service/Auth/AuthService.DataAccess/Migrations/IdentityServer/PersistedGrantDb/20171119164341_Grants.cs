@@ -13,9 +13,9 @@ namespace AuthService.DataAccess.Migrations
                 {
                     Key = table.Column<string>(maxLength: 200, nullable: false),
                     ClientId = table.Column<string>(maxLength: 200, nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     Data = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false),
-                    Expiration = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Expiration = table.Column<DateTime>(type: "DATETIME", nullable: true),
                     SubjectId = table.Column<string>(maxLength: 200, nullable: true),
                     Type = table.Column<string>(maxLength: 50, nullable: false)
                 },

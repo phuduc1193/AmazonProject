@@ -7,7 +7,16 @@
 
         if (data) {
             $scope.client = data;
-            $scope.grantType = $scope.client.AllowedGrantTypes[0].GrantType;
+            switch ($scope.client.AllowedGrantTypes[0].GrantType) {
+                case 'implicit':
+                    $scope.grantType = 'Implicit';
+                    break;
+                case 'hybrid':
+                    $scope.grantType = 'Hybrid';
+                    break;
+                default:
+                    $scope.grantType = 'ClientCredentials';
+            }
         }
 
         $scope.activeTab = function (event, index) {
@@ -45,25 +54,33 @@
 
         $scope.setAllowedGrantTypes = function (type) {
             $scope.grantType = type;
-            $scope.client.AllowedGrantTypes = [{ GrantType: type }];
             switch (type) {
                 case 'Implicit':
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'implicit' }];
                     delete $scope.client.ClientSecrets;
+                    $scope.client.RequireClientSecret = false;
                     $scope.client.AllowedCorsOrigins = [{ Origin: "" }];
                     $scope.client.RedirectUris = [{ RedirectUri: "" }];
                     $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    $scope.client.AllowAccessTokensViaBrowser = true;
                     break;
                 case 'Hybrid':
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'hybrid' }];
                     $scope.client.ClientSecrets = [];
+                    $scope.client.RequireClientSecret = true;
                     delete $scope.client.AllowedCorsOrigins;
                     $scope.client.RedirectUris = [{ RedirectUri: "" }];
                     $scope.client.PostLogoutRedirectUris = [{ PostLogoutRedirectUri: "" }];
+                    delete $scope.client.AllowAccessTokensViaBrowser;
                     break;
                 default:
+                    $scope.client.AllowedGrantTypes = [{ GrantType: 'client_credentials' }];
                     $scope.client.ClientSecrets = [];
+                    $scope.client.RequireClientSecret = true;
                     delete $scope.client.AllowedCorsOrigins;
                     delete $scope.client.RedirectUris;
                     delete $scope.client.PostLogoutRedirectUris;
+                    delete $scope.client.AllowAccessTokensViaBrowser;
             }
             if ($scope.progression < 1)
                 $scope.progression = 1;
@@ -116,11 +133,10 @@
             }).length > 0;
         }
 
-        $scope.update = function (e) {
-            e.preventDefault();
-            if (!$scope.client.AllowedCorsOrigins || !$scope.client.AllowedCorsOrigins.Origin)
+        $scope.update = function () {
+            if (!$scope.client.AllowedCorsOrigins || $scope.client.AllowedCorsOrigins.length == 0 || !$scope.client.AllowedCorsOrigins[0].Origin)
                 delete $scope.client.AllowedCorsOrigins;
-            if (!$scope.client.PostLogoutRedirectUris || !$scope.client.PostLogoutRedirectUris.PostLogoutRedirectUri)
+            if (!$scope.client.PostLogoutRedirectUris || $scope.client.PostLogoutRedirectUris.length == 0 || !$scope.client.PostLogoutRedirectUris[0].PostLogoutRedirectUri)
                 delete $scope.client.PostLogoutRedirectUris;
 
             $http.put('Edit', $scope.client, {
