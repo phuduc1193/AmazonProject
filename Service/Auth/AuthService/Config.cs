@@ -29,11 +29,10 @@ namespace AuthService
             services.AddDbContext<TContext>(options => options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly)));
         }
 
-        public static IServiceCollection AddAuthenticationServices<TContext, TUser, TRole, TClaimFactory, TProfileService, TConfigurationDbContext, TPersistedGrantDbContext>(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        public static IServiceCollection AddAuthenticationServices<TContext, TUser, TRole, TProfileService, TConfigurationDbContext, TPersistedGrantDbContext>(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
             where TContext : DbContext
             where TUser : class, IApplicationUser
             where TRole : class, IApplicationRole
-            where TClaimFactory : class, IUserClaimsPrincipalFactory<TUser>
             where TProfileService : class, IProfileService
             where TConfigurationDbContext : DbContext, IConfigurationDbContext
             where TPersistedGrantDbContext : DbContext, IPersistedGrantDbContext
@@ -50,7 +49,6 @@ namespace AuthService
             services.AddIdentity<TUser, TRole>()
                 .AddRoleManager<RoleManager<TRole>>()
                 .AddEntityFrameworkStores<TContext>()
-                .AddClaimsPrincipalFactory<TClaimFactory>()
                 .AddDefaultTokenProviders();
 
             var identityServer = services.AddIdentityServer(options =>
@@ -94,13 +92,14 @@ namespace AuthService
             where TUser : class, IApplicationUser
         {
             services.AddTransient<IApplicationDbContext, ApplicationDbContext>();
-            services.AddScoped<IProfileService, ApplicationProfileService>();
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory<ApplicationUser, ApplicationRole>>();
+            services.AddScoped<IProfileService, ApplicationProfileService<ApplicationUser>>();
 
             services.AddScoped<IApiResourceRepository, ApiResourceRepository>();
             services.AddScoped<IIdentityResourceRepository, IdentityResourceRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
 
+            services.AddScoped<UserManager<TUser>, ApplicationUserManager<TUser>>();
+            services.AddScoped<ApplicationUserManager<TUser>, ApplicationUserManager<TUser>>();
             services.AddScoped<IUserService<TUser>, UserService<TUser>>();
             services.AddScoped<IApiResourceService, ApiResourceService>();
             services.AddScoped<IIdentityResourceService, IdentityResourceService>();

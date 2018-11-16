@@ -27,7 +27,7 @@ namespace AuthService
             });
             services.AddMvc();
             services.AddDbContexts<ApplicationDbContext>(Configuration);
-            services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, ApplicationRole, AppClaimsPrincipalFactory<ApplicationUser, ApplicationRole>, ApplicationProfileService, ApplicationDbContext, ApplicationDbContext>(Configuration, Environment);
+            services.AddAuthenticationServices<ApplicationDbContext, ApplicationUser, ApplicationRole, ApplicationProfileService<ApplicationUser>, ApplicationDbContext, ApplicationDbContext>(Configuration, Environment);
             services.AddDependencies<ApplicationUser>();
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }

@@ -1,17 +1,17 @@
 import { State, Action, StateContext } from "@ngxs/store";
 import { AddProductToCart } from "./app.actions";
-import { AuthState } from "./state/auth.state";
 
 export interface AppStateModel {
+  user: any;
   productIds: number[];
 }
 
 @State<AppStateModel>({
   name: "app",
   defaults: {
+    user: null,
     productIds: []
-  },
-  children: [AuthState]
+  }
 })
 export class AppState {
   constructor() {}

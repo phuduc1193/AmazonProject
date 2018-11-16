@@ -9,7 +9,6 @@ import { NgxsLoggerPluginModule } from "@ngxs/logger-plugin";
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 import { AppState } from "./app.state";
-import { AuthState } from "./state/auth.state";
 
 @NgModule({
   imports: [
@@ -19,7 +18,7 @@ import { AuthState } from "./state/auth.state";
     FormsModule,
     ReactiveFormsModule,
     NgBootstrapFormValidationModule.forRoot(),
-    NgxsModule.forRoot([AppState, AuthState]),
+    NgxsModule.forRoot([AppState]),
     NgxsLoggerPluginModule.forRoot({ logger: console, collapsed: true }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot()

@@ -11,7 +11,6 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -31,15 +30,13 @@ namespace AuthService.Controllers
         private readonly IEventService _events;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IUserService<ApplicationUser> _userService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         public AccountController(
             IAuthenticationSchemeProvider schemeProvider,
             IClientStore clientStore,
             IEventService events,
             IIdentityServerInteractionService interaction,
-            IUserService<ApplicationUser> userService,
-            UserManager<ApplicationUser> userManager
+            IUserService<ApplicationUser> userService
             )
         {
             _schemeProvider = schemeProvider;
@@ -47,7 +44,6 @@ namespace AuthService.Controllers
             _events = events;
             _interaction = interaction;
             _userService = userService;
-            _userManager = userManager;
         }
 
         /// <summary>
@@ -99,7 +95,7 @@ namespace AuthService.Controllers
                     };
                     var claims = new List<Claim>();
                     var roles = await _userService.GetRolesAsync(user);
-                    foreach(var role in roles)
+                    foreach (var role in roles)
                     {
                         claims.Add(new Claim("role", role));
                     }

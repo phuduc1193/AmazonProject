@@ -15,10 +15,10 @@ namespace AuthService.BusinessLogic
     public class UserService<TUser> : IUserService<TUser>
         where TUser : class, IApplicationUser
     {
-        private UserManager<TUser> _userManager;
+        private ApplicationUserManager<TUser> _userManager;
         private SignInManager<TUser> _signInManager;
 
-        public UserService(UserManager<TUser> userManager, SignInManager<TUser> signInManager)
+        public UserService(ApplicationUserManager<TUser> userManager, SignInManager<TUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

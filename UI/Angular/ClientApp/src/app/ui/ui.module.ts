@@ -7,6 +7,7 @@ import { LayoutComponent } from "./layout/layout.component";
 import { HeaderComponent } from "./header/header.component";
 import { FooterComponent } from "./footer/footer.component";
 import { SearchComponent } from "./search/search.component";
+import { CallbackComponent } from './callback/callback.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, NgProgressModule],
@@ -14,7 +15,8 @@ import { SearchComponent } from "./search/search.component";
     LayoutComponent,
     HeaderComponent,
     FooterComponent,
-    SearchComponent
+    SearchComponent,
+    CallbackComponent
   ],
   exports: [LayoutComponent]
 })

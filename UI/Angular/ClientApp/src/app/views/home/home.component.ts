@@ -1,7 +1,4 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { Select } from "@ngxs/store";
-import { Observable } from "rxjs";
-import { AuthState } from "../../shared/state/auth.state";
 
 @Component({
   selector: "app-home",
@@ -15,9 +12,6 @@ export class HomeComponent implements OnInit {
   constructor(@Inject("APP_NAME") appName: string) {
     this.appName = appName;
   }
-
-  @Select(AuthState.isLoggedIn)
-  isLoggedIn$: Observable<boolean>;
 
   ngOnInit() {}
 }
