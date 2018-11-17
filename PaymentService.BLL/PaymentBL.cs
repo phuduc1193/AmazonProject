@@ -24,7 +24,6 @@ namespace PaymentService.BLL
             }
             else
             {
-
                 responsePayment.AuthCode = Guid.NewGuid();
             }
 
