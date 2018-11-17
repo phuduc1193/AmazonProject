@@ -24,6 +24,7 @@ namespace PaymentService.BLL
             }
             else
             {
+
                 responsePayment.AuthCode = Guid.NewGuid();
             }
 
@@ -58,18 +59,22 @@ namespace PaymentService.BLL
                 errors.Add(new Error { ErrorCode = "33", ErrorDescription = "PaymentRequest.Payment.Amount must be provided" });
             }
 
-            if(creditCard != null && balance != 0)
+            if(creditCard == null)
+            {
+                errors.Add(new Error { ErrorCode = "34", ErrorDescription = "Credit card does not exist" });
+            }
+            else
             {
                 //Validate Card Holder Name
                 if (requestCreditCard.CardHolderName != creditCard.CardHolderName || requestCreditCard.CVV != creditCard.CVV || requestCreditCard.ExpireDate != creditCard.ExpireDate)
                 {
-                    errors.Add(new Error { ErrorCode = "34", ErrorDescription = "Credit card does not match" });
+                    errors.Add(new Error { ErrorCode = "35", ErrorDescription = "Credit card does not match" });
                 }
 
                 //Check if balance is sufficient for payment
                 if (requestPayment.Payment.Amount > balance)
                 {
-                    errors.Add(new Error { ErrorCode = "35", ErrorDescription = "Balance is not sufficient for payment" });
+                    errors.Add(new Error { ErrorCode = "36", ErrorDescription = "Balance is not sufficient for payment" });
                 }
             }
 
