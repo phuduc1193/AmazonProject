@@ -7,7 +7,7 @@ namespace Common.Models
         /// <summary>
         /// Process Time in milliseconds
         /// </summary>
-        public int ProcessTime { get; set; }
+        public long ProcessTime { get; set; }
 
         public List<Error> Errors { get; set; }
     }

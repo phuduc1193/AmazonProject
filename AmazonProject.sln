@@ -37,15 +37,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmailService.UnitTest", "Em
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payment", "Payment", "{931148DC-FBD9-49B3-97B3-2F5719ACB55B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "PaymentService\PaymentService.csproj", "{06CBFE2D-C1D8-47E6-9F8B-C2B8C792CA4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "PaymentService\PaymentService.csproj", "{06CBFE2D-C1D8-47E6-9F8B-C2B8C792CA4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.BLL", "PaymentService.BLL\PaymentService.BLL.csproj", "{F7E76CDC-68FF-4E1A-9843-A6A42F9110B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService.BLL", "PaymentService.BLL\PaymentService.BLL.csproj", "{F7E76CDC-68FF-4E1A-9843-A6A42F9110B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.Models", "PaymentService.Models\PaymentService.Models.csproj", "{3CAF639A-B312-43B2-A45C-74AA38AE29DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService.Models", "PaymentService.Models\PaymentService.Models.csproj", "{3CAF639A-B312-43B2-A45C-74AA38AE29DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.UnitTests", "PaymentService.UnitTests\PaymentService.UnitTests.csproj", "{3693346B-7339-4D0B-A180-7E8D5DB3D43A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService.UnitTests", "PaymentService.UnitTests\PaymentService.UnitTests.csproj", "{3693346B-7339-4D0B-A180-7E8D5DB3D43A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService.DAL", "PaymentService.DAL\PaymentService.DAL.csproj", "{27020680-F5C0-4246-84F6-A9B59CA59EAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService.DAL", "PaymentService.DAL\PaymentService.DAL.csproj", "{27020680-F5C0-4246-84F6-A9B59CA59EAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

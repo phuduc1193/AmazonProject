@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Common.Models;
+using Common.Models.RequestResponseModels;
 using EmailService.BLL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,19 +30,64 @@ namespace EmailService.Controllers
 
             var httpResponse = new HttpResponseMessage();
 
-            if (httpResponse.IsSuccessStatusCode)
-            {
-                if (emailBL.SendOrderConfirmationEmail(order))
-                {
-                    isSend = true;
-                }
-            }
-            else
-            {
-                isSend = false;
-            }
 
+            if (emailBL.SendOrderConfirmationEmail(order))
+            {
+                isSend = true;
+            }
             return isSend;
         }
+
+
+        //[HttpPost("[action]")]
+        //public EmailResponse ConfirmOrder2([FromBody] EmailRequest emailRequest)
+        //{
+        //    var response = new EmailResponse();
+
+        //    var sw = new Stopwatch();
+        //    sw.Start();
+
+        //    try
+        //    {
+        //        //TODO: call BLL
+        //        //
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // swtich ex
+        //        //response.Errors = ...
+        //    }
+        //    finally
+        //    {
+        //        sw.Stop();
+        //        response.ProcessTime = sw.ElapsedMilliseconds;
+        //    }
+        //    return response;
+        //}
+
+        //[HttpPost("[action]")]
+        //public EmailResponse ConfirmOrder3([FromBody] EmailRequest emailRequest)
+        //{
+        //    var response = new EmailResponse();
+
+        //    var sw = new Stopwatch();
+        //    sw.Start();
+
+        //    try
+        //    {
+        //        //TODO: call BLL
+        //        //
+        //    }
+        //    catch
+        //    {
+
+        //    }
+        //    finally
+        //    {
+        //        sw.Stop();
+        //        response.ProcessTime = sw.ElapsedMilliseconds;
+        //    }
+        //    return response;
+        //}
     }
 }

@@ -24,7 +24,7 @@ namespace EmailService.BLL
             }
 
             string body = "";
-            using (StreamReader reader = new StreamReader(@"D:\GitHub\AmazonProject\EmailService.BLL\HTML\OrderConfirmation.html"))
+            using (StreamReader reader = new StreamReader(@"F:\GitHub\AmazonProject\EmailService.BLL\HTML\OrderConfirmation.html"))
             {
                 body = reader.ReadToEnd();
             }
@@ -53,13 +53,34 @@ namespace EmailService.BLL
                     }
                 )
                 {
-                    SmtpClient client = new SmtpClient("smtp.outlook.com", 587)
+                    SmtpClient client = new SmtpClient("smtp.live.com", 587)
                     {
                         UseDefaultCredentials = false,
                         EnableSsl = true,
-                        Credentials = new NetworkCredential("soltran14@hotmail.com", "trantran1420")
+                        Credentials = new NetworkCredential("soltran14@hotmail.com", "trantran1420") //TODO: re-test with amazonclone14@gmail.com
                     };
+
+                    //client.SendCompleted += Client_SendCompleted;
+
+                    //client.SendCompleted += (object sender, System.ComponentModel.AsyncCompletedEventArgs e) =>
+                    //{
+                    //    if (e.Error != null)
+                    //    {
+
+                    //    }
+                    //};
+
+                    client.SendCompleted += (s, e) =>
+                    {
+                        if (e.Error != null)
+                        {
+                        }
+                    };
+
                     client.Send(message);
+
+                    
+
                     return true;
                 }
             }
