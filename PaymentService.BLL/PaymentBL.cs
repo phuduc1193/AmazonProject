@@ -35,7 +35,6 @@ namespace PaymentService.BLL
             List<Error> errors = new List<Error>();
 
             var creditCard = _bankDA.GetAccount(requestPayment.Payment.CreditCard.AccountNumber);
-            var balance = _bankDA.GetBalance(requestPayment.Payment.CreditCard.AccountNumber);
             var requestCreditCard = requestPayment.Payment.CreditCard;
 
             if (requestPayment == null)
@@ -71,7 +70,7 @@ namespace PaymentService.BLL
                 }
 
                 //Check if balance is sufficient for payment
-                if (requestPayment.Payment.Amount > balance)
+                if (requestPayment.Payment.Amount > creditCard.Balance)
                 {
                     errors.Add(new Error { ErrorCode = "36", ErrorDescription = "Balance is not sufficient for payment" });
                 }

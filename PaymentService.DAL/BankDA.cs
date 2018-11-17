@@ -38,6 +38,7 @@ namespace PaymentService.DAL
                                 creditCard.CardHolderName = reader["CardHolderName"].ToString();
                                 creditCard.CVV = reader["CVV"].ToString();
                                 creditCard.ExpireDate = reader["ExpirationDate"].ToString();
+                                creditCard.Balance = (double)reader["Balance"];
                             }
                         }
                         return creditCard;
@@ -47,41 +48,6 @@ namespace PaymentService.DAL
                 {
                     Debug.WriteLine(ex.ToString());
                     return null;
-                }
-
-            }
-        }
-
-        public double GetBalance(string AccountNumber)
-        {
-            using (SqlConnection connection = new SqlConnection(_connectionStr))
-            {
-                try
-                {
-                    double balance = 0;
-                    connection.Open();
-                    SqlCommand command = new SqlCommand("spGetAccount", connection)
-                    {
-                        CommandType = System.Data.CommandType.StoredProcedure
-                    };
-                    command.Parameters.Add("@AccountNumber", System.Data.SqlDbType.VarChar).Value = AccountNumber;
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                balance = (double)reader["Balance"];
-                            }      
-                        }
-                        return balance;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    return 0;
                 }
 
             }

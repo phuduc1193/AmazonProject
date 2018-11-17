@@ -8,5 +8,6 @@ namespace PaymentService.Models
         public string AccountNumber { get; set; }
         public string ExpireDate { get; set; }
         public string CVV { get; set; }
+        public double Balance { get; set; }
     }
 }
