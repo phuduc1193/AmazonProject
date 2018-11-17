@@ -23,8 +23,8 @@ namespace PaymentService.Controllers
         public PaymentResponse AuthorizePayment([FromBody] PaymentRequest payment)
         {
             var paymentBL = new PaymentBL();
-            var responsePayment = paymentBL.AuthorizePayment(payment);
-            return responsePayment;
+            var paymentResponse = paymentBL.AuthorizePayment(payment);
+            return paymentResponse;
         }
     }
 }

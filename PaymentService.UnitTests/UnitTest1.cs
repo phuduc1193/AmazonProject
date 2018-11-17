@@ -18,7 +18,7 @@ namespace PaymentService.UnitTests
                 CardHolderName = "Kha T Tran",
                 ExpireDate = "07/22",
                 CVV = "654",
-                AccountNumber = "1234567890123456"
+                AccountNumber = "1234-5678-9012-3456"
             };
 
             var reqJson = Newtonsoft.Json.JsonConvert.SerializeObject(req);
