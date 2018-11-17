@@ -42,13 +42,11 @@ namespace EmailService.BLL
         {
             string fromEmail = "soltran14@hotmail.com";
             string toEmail = order.User.Email;
-           
-
             string subject = "Your Amazon.com order of {orderItems}";
             string body = PopulateConfirmationEmailBody(order);
+
             try
-            {
-                
+            {   
                 using (MailMessage message = new MailMessage(fromEmail, toEmail, subject, body)
                     {
                         IsBodyHtml = true
