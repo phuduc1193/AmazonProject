@@ -21,11 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart", "Cart", "{DA03BB20-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService", "Service\Auth\AuthService\AuthService.csproj", "{57542859-47FC-4713-8914-CFCCC6D4A2C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.Common", "Service\Auth\AuthService.Common\AuthService.Common.csproj", "{34A5542A-99C4-46E1-BDED-A1B4151BB3C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService.Common", "Service\Auth\AuthService.Common\AuthService.Common.csproj", "{34A5542A-99C4-46E1-BDED-A1B4151BB3C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.DataAccess", "Service\Auth\AuthService.DataAccess\AuthService.DataAccess.csproj", "{153291D5-C668-4592-B55B-17D4B8D73EFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService.DataAccess", "Service\Auth\AuthService.DataAccess\AuthService.DataAccess.csproj", "{153291D5-C668-4592-B55B-17D4B8D73EFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.BusinessLogic", "Service\Auth\AuthService.BusinessLogic\AuthService.BusinessLogic.csproj", "{577522E8-DF64-4679-A515-F3969040FF0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthService.BusinessLogic", "Service\Auth\AuthService.BusinessLogic\AuthService.BusinessLogic.csproj", "{577522E8-DF64-4679-A515-F3969040FF0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
