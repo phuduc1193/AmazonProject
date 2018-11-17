@@ -1,4 +1,6 @@
-﻿namespace Common.Models
+﻿using System.Collections.Generic;
+
+namespace Common.Models
 {
     public abstract class ResponseBase
     {
@@ -7,6 +9,6 @@
         /// </summary>
         public int ProcessTime { get; set; }
 
-        public Error Errors { get; set; }
+        public List<Error> Errors { get; set; }
     }
 }
