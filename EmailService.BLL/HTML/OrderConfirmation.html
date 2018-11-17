@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <div>
+        <img src="D:\GitHub\AmazonProject\EmailService.BLL\Image\amazon-logo-transparent.png" width="150" />
+    </div>
+
+    <hr>
+
+    <h4 style="color:#868688">Hello {CustomerName}, </h4>
+
+    <h3 style="color:orange">Your order is confirm!</h3>
+
+    <p>Thank you for your order. We will let you know when your item is shipped </p>
+
+    <hr>
+
+    <div id="OrderDetail" style="background:#E3E3E5">
+        <h4 style="color:#868688">Order Details</h4>
+        <p> Purchased on <span id="purchaseDate">{Date}</span></p>
+        <p> Order ID: {OrderID}</p>
+
+        <p style="font-weight:700">Items:</p>
+        {Items}
+
+        <h2>Total: {TotalPrice}</h2>
+    </div>
+    
+</body>
+</html>
