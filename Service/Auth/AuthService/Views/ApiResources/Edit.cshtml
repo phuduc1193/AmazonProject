@@ -16,7 +16,7 @@
 
 <div class="container" ng-controller="EditApiResourceController as api">
     <div class="page-header">
-        <h3><small>Edit Resource</small> {{api.Name}}</h3>
+        <h3><small>Edit Resource</small> {{api.name}}</h3>
     </div>
     <div class="card">
         <div class="card-header">
@@ -28,7 +28,7 @@
                     <label class="control-label">
                         Display Name
                     </label>
-                    <input ng-model="api.DisplayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
+                    <input ng-model="api.displayName" class="form-control text-primary" placeholder="ex: Authentication API Gateway">
                 </div>
                 <div class="form-group col-md-4 col-xl-4 offset-xl-1 required">
                     <div class="row">
@@ -40,9 +40,9 @@
                         </div>
                         <div class="col-12 px-3">
                             <div class="align-items-center row">
-                                <div class="col ellipsis" title="{{api.Secrets[0].Value}}">{{ api.Secrets[0].Value }}</div>
+                                <div class="col ellipsis" title="{{ api.secret }}">{{ api.secret }}</div>
                                 <div class="col-auto pl-0">
-                                    <a href="#" class="btn btn-outline-success float-right" ng-click="api.clipboardText(api.Secrets[0].Value)">
+                                    <a href="#" class="btn btn-outline-success float-right" ng-click="api.clipboardText(api.secret)">
                                         <i class="far fa-copy" title="Copy secret to clipboard"></i>
                                     </a>
                                 </div>
@@ -53,7 +53,7 @@
                 <div class="col-md-2 d-md-block d-none form-group offset-md-1">
                     <span>Resource Status</span>
                     <label class="m-0 mx-3 switch">
-                        <input type="checkbox" ng-model="api.Enabled" ng-true-value="true" ng-false-value="false">
+                        <input type="checkbox" ng-model="api.enabled">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -62,7 +62,7 @@
                 <label class="control-label">
                     Description
                 </label>
-                <textarea ng-model="api.Description" class="form-control text-primary"></textarea>
+                <textarea ng-model="api.description" class="form-control text-primary"></textarea>
             </div>
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
@@ -94,28 +94,28 @@
                                     </tr>
                                 </thead>
                                 <tbody id="content">
-                                    <tr ng-repeat="scope in api.Scopes track by $index">
+                                    <tr ng-repeat="scope in api.scopes track by $index">
                                         <td class="table-input">
-                                            <input ng-model="scope.Name" type="text" class="form-control text-primary">
+                                            <input ng-model="scope.name" type="text" class="form-control text-primary">
                                         </td>
                                         <td class="table-input">
-                                            <input ng-model="scope.DisplayName" type="text" class="form-control text-primary">
+                                            <input ng-model="scope.displayName" type="text" class="form-control text-primary">
                                         </td>
                                         <td class="table-input">
-                                            <input ng-model="scope.Description" type="text" class="form-control text-primary">
+                                            <input ng-model="scope.description" type="text" class="form-control text-primary">
                                         </td>
                                         <td class="table-input">
-                                            <input ng-model="scope.Required" type="checkbox">
+                                            <input ng-model="scope.required" type="checkbox">
                                         </td>
                                         <td class="table-input">
-                                            <input ng-model="scope.Emphasize" type="checkbox">
+                                            <input ng-model="scope.emphasize" type="checkbox">
                                         </td>
                                         <td class="align-middle text-center">
-                                            <a class="text-danger" href="#" ng-click="api.removeScope($index)" ng-class="{ 'd-none': $index == 0 && api.Scopes.length == 1 }">
+                                            <a class="text-danger" href="#" ng-click="api.removeScope($index)" ng-class="{ 'd-none': $index == 0 && api.scopes.length == 1 }">
                                                 <i class="fas fa-minus-circle"></i>
                                             </a>
                                             <a class="text-muted not-allowed" href="#" title="At least one scope is required"
-                                               ng-class="{ 'd-none': $index != 0 || api.Scopes.length != 1 }">
+                                               ng-class="{ 'd-none': $index != 0 || api.scopes.length != 1 }">
                                                 <i class="fas fa-minus-circle"></i>
                                             </a>
                                         </td>
@@ -130,9 +130,9 @@
                     <div class="border border-light border-top-0 mb-3 rounded-bottom">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-6 col-md-3" ng-repeat="claim in api.claims track by $index">
+                                <div class="col-6 col-md-3" ng-repeat="claim in api.defaultClaims track by $index">
                                     <div class="checkbox cursor-pointer row">
-                                        <input id="id-claim-{{claim}}" type="checkbox" ng-click="api.addOrRemoveClaim(claim)" class="pr-2 mt-1" ng-checked="api.shouldCheck(claim)">
+                                        <input id="id-claim-{{claim}}" type="checkbox" ng-model="claim.checked" class="pr-2 mt-1">
                                         <label for="id-claim-{{claim}}" class="text-black-50 px-1 col ellipsis" title="{{claim.name}}">{{ claim.name }}</label>
                                     </div>
                                 </div>

@@ -405,6 +405,7 @@ namespace AuthService.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserName = model.Username,
+                MiddleName = model.MiddleName,
                 Email = model.Email
             };
         }

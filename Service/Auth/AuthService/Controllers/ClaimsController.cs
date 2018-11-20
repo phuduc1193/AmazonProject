@@ -12,13 +12,13 @@ namespace AuthService.Controllers
     public class ClaimsController : ControllerBase
     {
         [HttpGet]
-        public List<ApiResourceClaimViewModel> List()
+        public List<ClaimViewModel> List()
         {
-            var claims = new List<ApiResourceClaimViewModel>();
+            var claims = new List<ClaimViewModel>();
             var fields = typeof(JwtClaimTypes).GetFields(BindingFlags.Static | BindingFlags.Public);
             foreach (var fieldInfo in fields)
             {
-                var claim = new ApiResourceClaimViewModel
+                var claim = new ClaimViewModel
                 {
                     Name = fieldInfo.Name.AddSpaceBeforeUppercase(),
                     Type = fieldInfo.GetValue(null).ToString()

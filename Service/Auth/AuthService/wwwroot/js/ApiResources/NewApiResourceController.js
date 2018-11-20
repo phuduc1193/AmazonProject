@@ -1,27 +1,27 @@
 ﻿angular.module('authServiceApp', [])
     .controller('NewApiResourceController', ['$http', function ($http) {
         const defaultScope = {
-            Name: "",
-            DisplayName: "",
-            Description: "",
-            Required: true,
-            Emphasize: true
+            name: "",
+            displayName: "",
+            description: "",
+            required: true,
+            emphasize: true
         };
         var api = this;
-        api.Name = "";
-        api.DisplayName = "";
-        api.Description = "";
-        api.Enabled = true;
-        api.Scopes = [angular.copy(defaultScope)];
-        api.Secrets = [];
-        api.UserClaims = [];
+        api.name = "";
+        api.displayName = "";
+        api.description = "";
+        api.secret = "";
+        api.enabled = true;
+        api.scopes = [angular.copy(defaultScope)];
+        api.claims = [];
 
         api.addScope = function () {
-            api.Scopes.push(angular.copy(defaultScope));
+            api.scopes.push(angular.copy(defaultScope));
         };
 
         api.removeScope = function (index) {
-            api.Scopes.splice(index, 1);
+            api.scopes.splice(index, 1);
         }
 
         api.create = function () {
@@ -37,6 +37,10 @@
                 });
                 return;
             }
+
+            api.claims = api.defaultClaims.filter(function (c) {
+                return c.checked;
+            });
 
             $http.post('New', api, {
                 headers: {
@@ -63,21 +67,14 @@
         validateData = function (data) {
             if (!data)
                 return false;
-            if (!data.Name || !data.DisplayName || !data.Description)
-                return false;
-            if (!data.Secrets || !data.Secrets[0].Value)
+            if (!data.name || !data.displayName || !data.description || !data.secret)
                 return false;
             return true;
         }
 
         api.generateSecret = function () {
-            api.Secrets = [];
             const secretString = sha256(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
-            const secretData = {
-                Value: secretString,
-                Description: `Secret for ${api.Name}`
-            };
-            api.Secrets.push(secretData);
+            api.secret = secretString;
         }
 
         api.clipboardText = function (str) {
@@ -89,18 +86,9 @@
             document.body.removeChild(el);
         }
 
-        api.addOrRemoveClaim = function (claim) {
-            const index = api.UserClaims.findIndex(function (c) {
-                return c.Type == claim.type;
-            });
-            if (index > -1)
-                api.UserClaims.splice(index, 1);
-            else api.UserClaims.push({ Type: claim.type });
-        }
-
         function getClaims() {
             $http.get('/api/claims').then(function (results) {
-                api.claims = results.data.sort(function (a, b) {
+                api.defaultClaims = results.data.sort(function (a, b) {
                     return a.name.length - b.name.length;
                 });
             }, function () {

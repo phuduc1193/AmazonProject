@@ -1,32 +1,32 @@
 ﻿angular.module('authServiceApp', [])
     .controller('EditApiResourceController', ['$http', function ($http) {
         const defaultScope = {
-            Name: "",
-            DisplayName: "",
-            Description: "",
-            Required: true,
-            Emphasize: true
+            name: "",
+            displayName: "",
+            description: "",
+            required: true,
+            emphasize: true
         };
         var api = this;
         const data = JSON.parse($("#Data").val());
 
         if (data) {
-            api.Id = data.Id;
-            api.Name = data.Name;
-            api.DisplayName = data.DisplayName;
-            api.Description = data.Description;
-            api.Enabled = data.Enabled;
-            api.Secrets = data.Secrets;
-            api.Scopes = data.Scopes;
-            api.UserClaims = data.UserClaims;
+            api.id = data.id;
+            api.name = data.name;
+            api.displayName = data.displayName;
+            api.description = data.description;
+            api.secret = data.secret;
+            api.enabled = data.enabled;
+            api.claims = data.claims;
+            api.scopes = data.scopes;
         }
 
         api.addScope = function () {
-            api.Scopes.push(angular.copy(defaultScope));
+            api.scopes.push(angular.copy(defaultScope));
         };
 
         api.removeScope = function (index) {
-            api.Scopes.splice(index, 1);
+            api.scopes.splice(index, 1);
         }
 
         api.edit = function () {
@@ -42,6 +42,10 @@
                 });
                 return;
             }
+
+            api.claims = api.defaultClaims.filter(function (c) {
+                return c.checked;
+            });
 
             $http.put('Edit', api, {
                 headers: {
@@ -66,26 +70,16 @@
         };
 
         validateData = function (data) {
-            console.log(data);
             if (!data)
                 return false;
-            if (!data.Name || !data.DisplayName || !data.Description)
-                return false;
-            if (!data.Secrets || !data.Secrets[0].Value)
-                return false;
-            if (!data.Scopes)
+            if (!data.name || !data.displayName || !data.description || !data.secret)
                 return false;
             return true;
         }
 
         api.generateSecret = function () {
-            api.Secrets = [];
             const secretString = sha256(Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5));
-            const secretData = {
-                Value: secretString,
-                Description: `Secret for ${api.Name}`
-            };
-            api.Secrets.push(secretData);
+            api.secret = secretString;
         }
 
         api.clipboardText = function (str) {
@@ -97,19 +91,18 @@
             document.body.removeChild(el);
         }
 
-        api.addOrRemoveClaim = function (claim) {
-            const index = api.UserClaims.findIndex(function (c) {
-                return c.Type == claim.type;
-            });
-            if (index > -1)
-                api.UserClaims.splice(index, 1);
-            else api.UserClaims.push({ Type: claim.type });
-        }
-
         function getClaims() {
             $http.get('/api/claims').then(function (results) {
-                api.claims = results.data.sort(function (a, b) {
+                api.defaultClaims = results.data.sort(function (a, b) {
                     return a.name.length - b.name.length;
+                });
+
+                api.claims.forEach(function (c) {
+                    const indexClaim = api.defaultClaims
+                        .map(function (c) { return c.type; })
+                        .indexOf(c.type);
+                    api.defaultClaims[indexClaim].checked = true;
+                    api.defaultClaims[indexClaim].id = c.id;
                 });
             }, function () {
                 bootbox.alert({
@@ -128,12 +121,4 @@
         }
 
         getClaims();
-
-        api.shouldCheck = function (claim) {
-            if (!api.UserClaims || api.UserClaims.length == 0)
-                return false;
-            return api.UserClaims.filter(function (c) {
-                return c.Type == claim.type;
-            }).length > 0;
-        }
     }]);

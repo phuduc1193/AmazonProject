@@ -10,6 +10,9 @@ namespace AuthService.ViewModels
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "Middle Name")]
+        public string MiddleName { get; set; }
+
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
